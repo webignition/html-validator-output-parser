@@ -7,6 +7,8 @@ use webignition\HtmlValidator\Output\Body\Body;
 
 class Output {
     
+    const STATUS_VALID = 'Valid';
+    
     
     /**
      *
@@ -39,6 +41,15 @@ class Output {
      */
     public function getMessages() {
         return $this->body->getMessages();
+    }
+    
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function isValid() {        
+        return $this->header->get('status') === self::STATUS_VALID;
     }
     
 }
