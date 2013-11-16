@@ -7,7 +7,8 @@
     "license": "MIT",
 
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "webignition/internet-media-type":">=0.4.4"                
     },
 
     "autoload": {
@@ -19,7 +20,6 @@
 
     "require-dev": {
         "symfony/class-loader": "*",
-        "phpunit/phpunit": "3.7.*",
-        "webignition/internet-media-type":">=0.4.4"
+        "phpunit/phpunit": "3.7.*"
     }
 }
