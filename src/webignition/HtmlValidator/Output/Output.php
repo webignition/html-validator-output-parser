@@ -8,6 +8,8 @@ use webignition\HtmlValidator\Output\Body\Body;
 class Output {
     
     const STATUS_VALID = 'Valid';
+    const STATUS_ABORT = 'Abort';
+    const TYPE_ERROR = 'error';
     
     
     /**
@@ -39,7 +41,7 @@ class Output {
      * 
      * @return array
      */
-    public function getMessages() {
+    public function getMessages() {        
         return $this->body->getMessages();
     }
     
@@ -48,8 +50,30 @@ class Output {
      * 
      * @return boolean
      */
-    public function isValid() {        
-        return $this->header->get('status') === self::STATUS_VALID;
+    public function isValid() {
+        $status = $this->header->get('status');
+        if ($status == self::STATUS_ABORT) {
+            return null;
+        }
+        
+        return $status === self::STATUS_VALID;
+    }
+    
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getErrorCount() {
+        $errorCount = 0;
+        
+        foreach ($this->getMessages() as $message) {
+            if (isset($message->type) && $message->type == self::TYPE_ERROR) {
+                $errorCount++;
+            }
+        }
+        
+        return $errorCount;
     }
     
 }

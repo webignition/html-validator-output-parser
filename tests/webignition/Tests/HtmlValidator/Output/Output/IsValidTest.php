@@ -13,8 +13,29 @@ class IsValidTest extends BaseTest {
     
     public function testErrorFreeResultIsValid() {        
         $parser = new Parser();
-        $output = $parser->parse($this->getFixture('error-free.txt'));        
+        $output = $parser->parse($this->getFixture('0-errors.txt'));        
         $this->assertTrue($output->isValid());
-    }
+    }  
+
+    public function testResultWithThreeErrorsIsNotValid() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('3-errors.txt'));
+        
+        $this->assertFalse($output->isValid());
+    }    
+    
+    public function testValidatorInternalConnectionTimeoutIsNeitherValidNorInvalid() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-internal-connection-timeout-error.txt'));
+        
+        $this->assertNull($output->isValid());        
+    }      
+    
+    public function testValidatorInvalidContentTypeIsNeitherValidNorInvalid() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-invalid-content-type-error.txt'));
+        
+        $this->assertNull($output->isValid());        
+    }      
     
 }

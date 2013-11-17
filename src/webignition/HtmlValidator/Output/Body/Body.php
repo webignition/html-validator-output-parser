@@ -27,7 +27,7 @@ class Body {
      * @return boolean
      */
     public function hasContent() {
-        return is_null($this->content);
+        return !is_null($this->content);
     }
     
     

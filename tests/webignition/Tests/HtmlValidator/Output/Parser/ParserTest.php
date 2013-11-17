@@ -11,9 +11,19 @@ class ParserTest extends BaseTest {
         $this->setTestFixturePath(__CLASS__, $this->getName());
     }    
     
-    public function testParseReturnsOutput() {        
+    public function testParseExpectedValidatorOutputReturnsOutputObject() {        
         $parser = new Parser();        
-        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('error-free.txt')));
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('0-errors.txt')));
     }
+    
+    public function testParseValiatorInternalConnectionTimeoutFailureReturnsOutputObject() {        
+        $parser = new Parser();        
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-internal-connection-timeout-error.txt')));
+    }    
+    
+    public function testParseValiatorInvalidContentTypeFailureReturnsOutputObject() {        
+        $parser = new Parser();        
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-invalid-content-type-error.txt')));
+    }        
     
 }
