@@ -22,12 +22,16 @@ class Parser {
     public function parse($htmlValidatorBodyContent) {
         $this->htmlValidatorBodyContent = $htmlValidatorBodyContent;
         
-        if ($this->hasFatalErrorsCollection()) {
-            return $this->getFatalErrorCollectionOutputObject();
-        }
-        
         if ($this->isValidatorSoftwareError()) {
             return $this->getValidatorInternalErrorOutputObject();
+        }        
+        
+        if ($this->isCharacterEncodingError()) {            
+            return $this->getCharacterEncodingErrorOutputObject();
+        }        
+        
+        if ($this->hasFatalErrorsCollection()) {
+            return $this->getFatalErrorCollectionOutputObject();
         }
         
         return $this->getValidatorUnknownErrorOutputObject();
@@ -102,6 +106,29 @@ class Parser {
     }
     
     
+    private function isCharacterEncodingError() {
+        if (!$this->hasFatalErrorsCollection()) {
+            return false;
+        }
+        
+        $fatalErrorCollectionOutputObject = $this->getFatalErrorCollectionOutputObject();
+        if (!isset($fatalErrorCollectionOutputObject->messages)) {
+            return false;
+        }
+        
+        $messages = $fatalErrorCollectionOutputObject->messages;
+        if (count($messages) > 1) {
+            return false;
+        }
+        
+        $message = $messages[0];
+        if (!isset($message->message)) {
+            return false;
+        }
+        
+        return substr_count($message->message, 'contained one or more bytes that I cannot interpret') === 1;
+    }
+    
     private function getValidatorInternalErrorOutputObject() {        
         $outputObject = new \stdClass();
         $outputObject->messages = array();      
@@ -110,6 +137,27 @@ class Parser {
         $currentError->message = 'Sorry, this document can\'t be checked';
         $currentError->type = 'error';
         $currentError->messageId = 'validator-internal-server-error';
+
+        $outputObject->messages[] = $currentError;
+        return $outputObject;       
+    }    
+    
+    
+    private function getCharacterEncodingErrorOutputObject() {
+        if (!$this->isCharacterEncodingError()) {
+            return null;
+        }
+        
+        $fatalErrorCollectionOutputObject = $this->getFatalErrorCollectionOutputObject();             
+        $message = $fatalErrorCollectionOutputObject->messages[0]->message;
+        
+        $outputObject = new \stdClass();
+        $outputObject->messages = array();      
+        
+        $currentError = new \stdClass();
+        $currentError->message = $message;
+        $currentError->type = 'error';
+        $currentError->messageId = 'character-encoding';
 
         $outputObject->messages[] = $currentError;
         return $outputObject;       

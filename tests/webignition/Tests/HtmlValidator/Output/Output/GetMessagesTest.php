@@ -60,6 +60,15 @@ class GetMessagesTest extends BaseTest {
         $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
         
         $this->assertEquals(1, count($output->getMessages()));
-    }       
+    }  
+    
+    public function testParseValidatorInvalidCharacterEncodingErrorReturnsCorrectMessageId() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
+        
+        $messages = $output->getMessages();
+        
+        $this->assertEquals('character-encoding', $messages[0]->messageId);    
+    }    
     
 }
