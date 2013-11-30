@@ -8,7 +8,7 @@ use webignition\HtmlValidator\Output\Body\Parser as BodyParser;
 class Parser {    
     
     public function parse($htmlValidatorOutput) {        
-        $headerBodyParts = explode("\n\n", $htmlValidatorOutput, 2);
+        $headerBodyParts = explode("\n\n", str_replace("\r\n", "\n", $htmlValidatorOutput), 2);       
         
         $headerParser = new HeaderParser();
         $header = $headerParser->parse($headerBodyParts[0]);
