@@ -11,6 +11,7 @@ class Output {
     const STATUS_ABORT = 'Abort';
     const TYPE_ERROR = 'error';
     
+    const VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID = 'validator-internal-server-error';
     
     /**
      *
@@ -50,9 +51,9 @@ class Output {
      * 
      * @return boolean
      */
-    public function isValid() {
+    public function isValid() {        
         $status = $this->header->get('status');
-        if ($status == self::STATUS_ABORT) {
+        if (is_null($status) || $status == self::STATUS_ABORT) {
             return null;
         }
         
@@ -68,6 +69,10 @@ class Output {
         $errorCount = 0;
         
         foreach ($this->getMessages() as $message) {
+            if (isset($message->messageId) && $message->messageId == self::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID) {
+                return null;
+            }
+            
             if (isset($message->type) && $message->type == self::TYPE_ERROR) {
                 $errorCount++;
             }

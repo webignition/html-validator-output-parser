@@ -39,4 +39,17 @@ class GetErrorCountTest extends BaseTest {
         $this->assertEquals(1, $output->getErrorCount());      
     }    
     
+    public function testParseValidatorInternalSoftwareErrorHasErrorCountOfNull() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-internal-software-error.txt'));
+        
+        $this->assertNull( $output->getErrorCount());      
+    }    
+    
+    public function testParseValidatorInvalidCharacterEncodingHasErrorCountOfOne() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
+        
+        $this->assertEquals(1, $output->getErrorCount());       
+    }    
 }

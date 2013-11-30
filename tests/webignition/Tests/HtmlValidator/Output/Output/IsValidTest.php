@@ -36,6 +36,21 @@ class IsValidTest extends BaseTest {
         $output = $parser->parse($this->getFixture('validator-invalid-content-type-error.txt'));
         
         $this->assertNull($output->isValid());        
+    }     
+    
+    public function testParseValidatorInternalSoftwareErrorIsNeitherValidNorInvalid() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-internal-software-error.txt'));
+        
+        $this->assertNull($output->isValid());    
     }      
+    
+    
+    public function testParseValidatorInvalidCharacterEncodingErrorIsNeitherValidInvalid() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
+        
+        $this->assertNull($output->isValid());    
+    }         
     
 }

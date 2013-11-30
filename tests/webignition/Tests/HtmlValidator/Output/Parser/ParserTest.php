@@ -24,6 +24,16 @@ class ParserTest extends BaseTest {
     public function testParseValiatorInvalidContentTypeFailureReturnsOutputObject() {        
         $parser = new Parser();        
         $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-invalid-content-type-error.txt')));
-    }        
+    } 
+    
+    public function testParseValidatorInternalSoftwareErrorReturnsOutputObject() {
+        $parser = new Parser();        
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-internal-software-error.txt')));        
+    }
+    
+    public function testParseValidatorInvalidCharacterEncodingErrorReturnsOutputObject() {
+        $parser = new Parser();        
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt')));        
+    }
     
 }

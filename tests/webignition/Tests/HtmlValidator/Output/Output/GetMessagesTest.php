@@ -37,6 +37,29 @@ class GetMessagesTest extends BaseTest {
         $output = $parser->parse($this->getFixture('validator-invalid-content-type-error.txt'));
         
         $this->assertEquals(1, count($output->getMessages()));       
+    }  
+    
+    public function testParseValidatorInternalSoftwareErrorReturnsErrorSetWithSingleError() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-internal-software-error.txt'));
+        
+        $this->assertEquals(1, count($output->getMessages()));       
     }    
+    
+    public function testParseValidatorInternalSoftwareErrorReturnsCorrectMessageId() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-internal-software-error.txt'));
+        
+        $messages = $output->getMessages();
+        
+        $this->assertEquals('validator-internal-server-error', $messages[0]->messageId);    
+    }
+    
+    public function testParseValidatorInvalidCharacterEncodingErrorReturnsErrorSetWithSingleError() {        
+        $parser = new Parser();
+        $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
+        
+        $this->assertEquals(1, count($output->getMessages()));
+    }       
     
 }
