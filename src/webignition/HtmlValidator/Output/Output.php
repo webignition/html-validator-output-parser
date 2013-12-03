@@ -61,6 +61,17 @@ class Output {
     }
     
     
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function wasAborted() {
+        $status = $this->header->get('status');
+        return is_null($status) || $status == self::STATUS_ABORT;
+    }
+    
+    
     /**
      * 
      * @return int
