@@ -3,7 +3,7 @@
 namespace webignition\Tests\HtmlValidator\Output\Parser;
 
 use webignition\Tests\HtmlValidator\Output\BaseTest;
-use webignition\HtmlValidator\Output\Parser;
+use webignition\HtmlValidator\Output\Parser\Parser;
 
 class ParserTest extends BaseTest {
     

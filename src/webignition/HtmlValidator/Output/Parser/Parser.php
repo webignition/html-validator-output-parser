@@ -1,9 +1,10 @@
 <?php
 
-namespace webignition\HtmlValidator\Output;
+namespace webignition\HtmlValidator\Output\Parser;
 
 use webignition\HtmlValidator\Output\Header\Parser as HeaderParser;
 use webignition\HtmlValidator\Output\Body\Parser as BodyParser;
+use webignition\HtmlValidator\Output\Output;
 
 class Parser {    
     
