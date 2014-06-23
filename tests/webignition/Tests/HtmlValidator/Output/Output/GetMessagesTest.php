@@ -9,46 +9,41 @@ class GetMessagesTest extends BaseTest {
     
     public function setUp() {
         $this->setTestFixturePath(__CLASS__, $this->getName());
+        parent::setUp();
     }    
     
     public function testErrorFreeResultReturnsEmptyMessageSet() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('0-errors.txt'));
+        $output = $this->getParser()->parse($this->getFixture('0-errors.txt'));
         
         $this->assertEquals(array(), $output->getMessages());
     }    
     
     public function testResultWithThreeErrorsReturnsErrorSetWithThreeErrors() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('3-errors.txt'));
+        $output = $this->getParser()->parse($this->getFixture('3-errors.txt'));
         
         $this->assertEquals(3, count($output->getMessages()));
     }    
     
     public function testParseValidatorInternalConnectionTimeoutReturnsErrorSetWithSingleError() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-internal-connection-timeout-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-internal-connection-timeout-error.txt'));
         
         $this->assertEquals(1, count($output->getMessages()));       
     }
     
     public function testParseValidatorInvalidContentTypeReturnsErrorSetWithSingleError() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-invalid-content-type-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-invalid-content-type-error.txt'));
         
         $this->assertEquals(1, count($output->getMessages()));       
     }  
     
     public function testParseValidatorInternalSoftwareErrorReturnsErrorSetWithSingleError() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-internal-software-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-internal-software-error.txt'));
         
         $this->assertEquals(1, count($output->getMessages()));       
     }    
     
     public function testParseValidatorInternalSoftwareErrorReturnsCorrectMessageId() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-internal-software-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-internal-software-error.txt'));
         
         $messages = $output->getMessages();
         
@@ -56,15 +51,13 @@ class GetMessagesTest extends BaseTest {
     }
     
     public function testParseValidatorInvalidCharacterEncodingErrorReturnsErrorSetWithSingleError() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
         
         $this->assertEquals(1, count($output->getMessages()));
     }  
     
     public function testParseValidatorInvalidCharacterEncodingErrorReturnsCorrectMessageId() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
         
         $messages = $output->getMessages();
         

@@ -9,46 +9,41 @@ class WasAbortedTest extends BaseTest {
     
     public function setUp() {
         $this->setTestFixturePath(__CLASS__, $this->getName());
+        parent::setUp();
     }    
     
     public function testErrorFreeResultWasNotAborted() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('0-errors.txt'));
+        $output = $this->getParser()->parse($this->getFixture('0-errors.txt'));
         
         $this->assertFalse($output->wasAborted());
     }    
     
     public function testResultWithThreeErrorsWasNotAborted() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('3-errors.txt'));
+        $output = $this->getParser()->parse($this->getFixture('3-errors.txt'));
         
         $this->assertFalse($output->wasAborted());
     }    
     
     public function testParseValidatorInternalConnectionTimeoutWasAborted() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-internal-connection-timeout-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-internal-connection-timeout-error.txt'));
         
         $this->assertTrue($output->wasAborted());      
     }
     
     public function testParseValidatorInvalidContentTypeWasAborted() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-invalid-content-type-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-invalid-content-type-error.txt'));
         
         $this->assertTrue($output->wasAborted());  
     }    
     
     public function testParseValidatorInternalSoftwareErrorWasAborted() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-internal-software-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-internal-software-error.txt'));
         
         $this->assertTrue($output->wasAborted());
     }    
     
     public function testParseValidatorInvalidCharacterEncodingWasAborted() {        
-        $parser = new Parser();
-        $output = $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
+        $output = $this->getParser()->parse($this->getFixture('validator-invalid-character-encoding-error.txt'));
         
         $this->assertTrue($output->wasAborted());    
     }    

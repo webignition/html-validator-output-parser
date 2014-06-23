@@ -2,6 +2,8 @@
 
 namespace webignition\Tests\HtmlValidator\Output;
 
+use webignition\HtmlValidator\Output\Parser\Parser;
+
 abstract class BaseTest extends \PHPUnit_Framework_TestCase {
     
     const FIXTURES_BASE_PATH = '/../../../../fixtures';
@@ -10,7 +12,28 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase {
      *
      * @var string
      */
-    private $fixturePath = null;    
+    private $fixturePath = null;
+
+
+    /**
+     * @var Parser;
+     */
+    private $parser;
+
+
+    public function setUp() {
+        parent::setUp();
+        $this->parser = new Parser();
+    }
+
+
+    /**
+     * @return Parser
+     */
+    protected function getParser() {
+        return $this->parser;
+    }
+
 
     /**
      * 

@@ -9,31 +9,29 @@ class ParserTest extends BaseTest {
     
     public function setUp() {
         $this->setTestFixturePath(__CLASS__, $this->getName());
+        parent::setUp();
     }    
     
-    public function testParseExpectedValidatorOutputReturnsOutputObject() {        
-        $parser = new Parser();        
-        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('0-errors.txt')));
+    public function testParseExpectedValidatorOutputReturnsOutputObject() {
+
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $this->getParser()->parse($this->getFixture('0-errors.txt')));
     }
     
-    public function testParseValiatorInternalConnectionTimeoutFailureReturnsOutputObject() {        
-        $parser = new Parser();        
-        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-internal-connection-timeout-error.txt')));
+    public function testParseValiatorInternalConnectionTimeoutFailureReturnsOutputObject() {
+
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $this->getParser()->parse($this->getFixture('validator-internal-connection-timeout-error.txt')));
     }    
     
-    public function testParseValiatorInvalidContentTypeFailureReturnsOutputObject() {        
-        $parser = new Parser();        
-        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-invalid-content-type-error.txt')));
+    public function testParseValiatorInvalidContentTypeFailureReturnsOutputObject() {
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $this->getParser()->parse($this->getFixture('validator-invalid-content-type-error.txt')));
     } 
     
     public function testParseValidatorInternalSoftwareErrorReturnsOutputObject() {
-        $parser = new Parser();        
-        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-internal-software-error.txt')));        
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $this->getParser()->parse($this->getFixture('validator-internal-software-error.txt')));
     }
     
     public function testParseValidatorInvalidCharacterEncodingErrorReturnsOutputObject() {
-        $parser = new Parser();        
-        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($this->getFixture('validator-invalid-character-encoding-error.txt')));        
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $this->getParser()->parse($this->getFixture('validator-invalid-character-encoding-error.txt')));
     }
     
     public function testParseResponseWithCarriageReturnLineFeedSeparatorsReturnsOutputObject() {
@@ -43,9 +41,8 @@ class ParserTest extends BaseTest {
                 . '<p>' . "\r\n"
                 . 'error wording' . "\r\n"
                 . '</p>';
-        
-        $parser = new Parser();        
-        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $parser->parse($validatorOutput));
+
+        $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $this->getParser()->parse($validatorOutput));
     }    
     
 }
