@@ -13,7 +13,6 @@ class ParserTest extends BaseTest {
     }    
     
     public function testParseExpectedValidatorOutputReturnsOutputObject() {
-
         $this->assertInstanceOf('webignition\HtmlValidator\Output\Output', $this->getParser()->parse($this->getFixture('0-errors.txt')));
     }
     

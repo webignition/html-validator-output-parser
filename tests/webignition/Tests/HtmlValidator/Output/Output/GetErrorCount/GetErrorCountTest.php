@@ -3,7 +3,6 @@
 namespace webignition\Tests\HtmlValidator\Output\Output;
 
 use webignition\Tests\HtmlValidator\Output\BaseTest;
-use webignition\HtmlValidator\Output\Parser\Parser;
 
 class GetErrorCountTest extends BaseTest {
     
