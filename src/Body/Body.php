@@ -43,7 +43,7 @@ class Body
     public function getMessages()
     {
         if (!$this->hasContent()) {
-            return array();
+            return [];
         }
 
         return $this->getContent()->messages;
