@@ -8,6 +8,18 @@ use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
+    public function testParseInvalidOutputContentType()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid content type: text/plain');
+        $this->expectExceptionCode(1);
+
+        $fixture = FixtureLoader::load('ValidatorOutput/invalid-output-content-type.txt');
+
+        $parser = new Parser();
+        $parser->parse($fixture);
+    }
+
     /**
      * @dataProvider parseDataProvider
      *
