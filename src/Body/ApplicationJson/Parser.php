@@ -4,9 +4,10 @@ namespace webignition\HtmlValidator\Output\Body\ApplicationJson;
 
 use webignition\HtmlValidator\Output\Parser\Configuration;
 
-class Parser {
-
-    const AMPERSAND_ENCODING_MESSAGE = '& did not start a character reference. (& probably should have been escaped as &amp;.)';
+class Parser
+{
+    const AMPERSAND_ENCODING_MESSAGE =
+        '& did not start a character reference. (& probably should have been escaped as &amp;.)';
 
     /**
      * @var Configuration
@@ -14,24 +15,23 @@ class Parser {
     private $configuration;
 
     /**
-     *
      * @var string
      */
     private $htmlValidatorBodyContent = null;
 
-
     /**
      * @param Configuration $configuration
      */
-    public function setConfiguration(Configuration $configuration) {
+    public function setConfiguration(Configuration $configuration)
+    {
         $this->configuration = $configuration;
     }
-
 
     /**
      * @return Configuration
      */
-    public function getConfiguration() {
+    public function getConfiguration()
+    {
         if (is_null($this->configuration)) {
             $this->configuration = new Configuration();
         }
@@ -39,8 +39,13 @@ class Parser {
         return $this->configuration;
     }
 
-
-    public function parse($htmlValidatorBodyContent) {
+    /**
+     * @param string $htmlValidatorBodyContent
+     *
+     * @return mixed
+     */
+    public function parse($htmlValidatorBodyContent)
+    {
         $this->htmlValidatorBodyContent = $htmlValidatorBodyContent;
 
         $parsedBody = json_decode($htmlValidatorBodyContent);
@@ -50,7 +55,6 @@ class Parser {
             if ($this->isMessageToBeExcluded($message)) {
                 unset($messages[$index]);
             }
-
         }
 
         $parsedBody->messages = $messages;
@@ -58,14 +62,20 @@ class Parser {
         return $parsedBody;
     }
 
+    /**
+     * @param \stdClass $message
+     *
+     * @return bool
+     */
+    private function isMessageToBeExcluded($message)
+    {
+        $configuration = $this->getConfiguration();
+        $ignoreAmpersandEncodingIssues = $configuration->getIgnoreAmpersandEncodingIssues();
 
-    private function isMessageToBeExcluded($message) {
-        if ($message->message === self::AMPERSAND_ENCODING_MESSAGE && $this->getConfiguration()->getIgnoreAmpersandEncodingIssues()) {
+        if (self::AMPERSAND_ENCODING_MESSAGE === $message->message && $ignoreAmpersandEncodingIssues) {
             return true;
         }
 
         return false;
     }
-
-
 }
