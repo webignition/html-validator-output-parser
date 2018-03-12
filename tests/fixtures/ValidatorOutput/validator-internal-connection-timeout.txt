@@ -8,7 +8,7 @@ X-W3C-Validator-Status:Abort
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>
-            
+
             Validation Results - W3C Markup Validator</title>
         <link rel="icon" href="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%02%00%00%00%90%91h6%00%00%00%19IDAT(%91c%BCd%AB%C2%40%0A%60%22I%F5%A8%86Q%0DCJ%03%00%DE%B5%01S%07%88%8FG%00%00%00%00IEND%AEB%60%82" type="image/png" />
     <link rev="made" href="mailto:www-validator@w3.org" />
@@ -21,7 +21,7 @@ X-W3C-Validator-Status:Abort
       markup validation service, based on SGML and XML parsers." />
   </head>
   <body>
-    
+
     <div id="banner">
      <h1 id="title">
        <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="./images/w3c.png" /></a>
@@ -37,29 +37,29 @@ X-W3C-Validator-Status:Abort
 
         <ul class="navbar" id="jumpbar">
                 <li><strong>Jump To:</strong></li>
-                
-                
-          
+
+
+
 
                   <li><a href="#fatal-errors">Error(s) blocking validation</a></li>
 
-  
-  
-  
+
+
+
         </ul>
 
 
-      
-  
+
+
   <h2 id="results" class="invalid">Sorry! This document cannot be checked.</h2>
-    
-  
 
 
 
 
-      
-      
+
+
+
+
 
 <ol id="fatal-errors">
 
@@ -81,20 +81,20 @@ X-W3C-Validator-Status:Abort
 <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
   <p>
     I got the following unexpected response when trying to
-    retrieve &lt;<a href="http://vash-pereezd.com.ua/dachnye-pereezdy.html">http://vash-pereezd.com.ua/dachnye-pereezdy.html</a>&gt;:
+    retrieve &lt;<a href="http://example.com/">http://example.com/</a>&gt;:
   </p>
   <blockquote>
-    <p><code>500 Can&#39;t connect to vash-pereezd.com.ua:80 (connect: Connection timed out)</code></p>
+    <p><code>500 Can&#39;t connect to example.com:80 (connect: Connection timed out)</code></p>
   </blockquote>
-  
+
   <p>
     If you made recent changes to your domain name (DNS) configuration, you may
     also want to <a href="http://www.squish.net/dnscheck/">check that your
     domain records are correct</a>, or ask your hosting company to do so.
   </p>
-  
-  
-  
+
+
+
 </li>
 
 

@@ -42,7 +42,7 @@ class Parser
     /**
      * @param string $htmlValidatorBodyContent
      *
-     * @return mixed
+     * @return \stdClass
      */
     public function parse($htmlValidatorBodyContent)
     {

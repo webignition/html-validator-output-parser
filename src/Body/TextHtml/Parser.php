@@ -192,7 +192,8 @@ class Parser
     /**
      * @return \stdClass
      */
-    private function getFatalErrorCollectionOutputObject() {
+    private function getFatalErrorCollectionOutputObject()
+    {
         $errorContainers = $this->getFatalErrorsCollection()->getElementsByTagName('li');
 
         $outputObject = new \stdClass();

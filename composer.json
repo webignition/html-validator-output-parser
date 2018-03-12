@@ -12,7 +12,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "webignition\\Tests\\HtmlValidator\\Output\\": "tests/"
+            "webignition\\Tests\\HtmlValidator\\Output\\": "tests/",
+            "webignition\\Tests\\HtmlValidator\\Helper\\": "tests/Helper"
         }
     },
     "scripts": {
