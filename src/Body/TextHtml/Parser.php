@@ -74,8 +74,10 @@ class Parser
      */
     private function isValidatorSoftwareError()
     {
-        if (!$this->hasLevelOneHeading()) {
-            return false;
+        $levelOneHeading = $this->getLevelOneHeading();
+
+        if (empty($levelOneHeading)) {
+            return null;
         }
 
         return $this->getLevelOneHeading()->textContent === self::SOFTWARE_ERROR_HEADING_CONTENT;
@@ -86,20 +88,14 @@ class Parser
      */
     private function getLevelOneHeading()
     {
+        /* @var \DOMNodeList */
         $levelOneHeadings = $this->getDom()->getElementsByTagName('h1');
-        if (is_null($levelOneHeadings)) {
+
+        if (0 === $levelOneHeadings->length) {
             return null;
         }
 
         return $levelOneHeadings->item(0);
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasLevelOneHeading()
-    {
-        return !is_null($this->getLevelOneHeading());
     }
 
     /**
@@ -112,19 +108,10 @@ class Parser
         }
 
         $fatalErrorCollectionOutputObject = $this->getFatalErrorCollectionOutputObject();
-        if (!isset($fatalErrorCollectionOutputObject->messages)) {
-            return false;
-        }
 
         $messages = $fatalErrorCollectionOutputObject->messages;
-        if (count($messages) > 1) {
-            return false;
-        }
 
         $message = $messages[0];
-        if (!isset($message->message)) {
-            return false;
-        }
 
         return substr_count($message->message, 'contained one or more bytes that I cannot interpret') === 1;
     }
@@ -147,14 +134,10 @@ class Parser
     }
 
     /**
-     * @return null|\stdClass
+     * @return \stdClass
      */
     private function getCharacterEncodingErrorOutputObject()
     {
-        if (!$this->isCharacterEncodingError()) {
-            return null;
-        }
-
         $fatalErrorCollectionOutputObject = $this->getFatalErrorCollectionOutputObject();
         $message = $fatalErrorCollectionOutputObject->messages[0]->message;
 
@@ -197,7 +180,7 @@ class Parser
         $errorContainers = $this->getFatalErrorsCollection()->getElementsByTagName('li');
 
         $outputObject = new \stdClass();
-        $outputObject->messages = array();
+        $outputObject->messages = [];
 
         foreach ($errorContainers as $errorContainer) {
             /* @var $errorContainer \DOMElement */
