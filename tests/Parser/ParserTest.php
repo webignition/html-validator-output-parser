@@ -1,6 +1,6 @@
 <?php
 
-namespace webignition\Tests\HtmlValidator;
+namespace webignition\Tests\HtmlValidator\Parser;
 
 use webignition\HtmlValidator\Output\Output;
 use webignition\HtmlValidator\Output\Parser\Parser;

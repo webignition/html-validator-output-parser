@@ -25,6 +25,7 @@ class Configuration
     public function disableIgnoreAmpersandEncodingIssues()
     {
         $this->ignoreAmpersandEncodingIssues = false;
+
         return $this;
     }
 
