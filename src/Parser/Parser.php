@@ -20,14 +20,14 @@ class Parser
      */
     public function parse($htmlValidatorOutput)
     {
-        $headerBodyParts = explode("\n\n", str_replace("\r\n", "\n", $htmlValidatorOutput), 2);
+        $headerBodyParts = HeaderBodySeparator::separate($htmlValidatorOutput);
 
         $headerParser = new HeaderParser();
-        $header = $headerParser->parse($headerBodyParts[0]);
+        $header = $headerParser->parse($headerBodyParts[HeaderBodySeparator::PART_HEADER]);
 
         $bodyParser = new BodyParser();
         $bodyParser->setConfiguration($this->getConfiguration());
-        $body = $bodyParser->parse($header, $headerBodyParts[1]);
+        $body = $bodyParser->parse($header, $headerBodyParts[HeaderBodySeparator::PART_BODY]);
 
         $output = new Output($header, $body);
 
