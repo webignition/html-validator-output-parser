@@ -1,0 +1,20 @@
+<p>
+        Sorry, I am unable to validate this document because its content type
+        is <code>application/x-javascript</code>, which is
+        not currently supported by this service.
+      </p><p>
+        The Content-Type header is sent by your web server (or web browser if
+        you use the file upload interface) and depends on its configuration.
+        Commonly, web servers will have a mapping of filename extensions
+        (such as ".html") to <abbr title="Multipurpose Internet Mail Extensions">MIME</abbr>
+        <code>Content-Type</code> values (such as <code>text/html</code>).
+      </p><p>
+        That you received this message can mean that your server is
+        not configured correctly, that your file does not have the correct
+        filename extension, or that you are attempting to validate a file
+        type that we do not support yet. In the latter case you should let
+        us know that you need us to support that content type (please include
+        all relevant details, including the URL to the standards document
+        defining the content type) using the instructions on the
+        <a href="feedback.html">Feedback Page</a>.
+      </p>

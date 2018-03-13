@@ -1,0 +1,10 @@
+<p>
+    I got the following unexpected response when trying to
+    retrieve &lt;<a href="http://example.com/">http://example.com/</a>&gt;:
+  </p><blockquote>
+    <p><code>500 Can't connect to example.com:80 (connect: Connection timed out)</code></p>
+  </blockquote><p>
+    If you made recent changes to your domain name (DNS) configuration, you may
+    also want to <a href="http://www.squish.net/dnscheck/">check that your
+    domain records are correct</a>, or ask your hosting company to do so.
+  </p>
