@@ -1,11 +1,11 @@
 <?php
 
-namespace webignition\Tests\HtmlValidator\Body\TextHtml;
+namespace webignition\Tests\HtmlValidator\Body;
 
 use webignition\HtmlValidator\Output\Body\TextHtmlParser;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var TextHtmlParser

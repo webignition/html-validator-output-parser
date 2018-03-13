@@ -1,12 +1,12 @@
 <?php
 
-namespace webignition\Tests\HtmlValidator\Body\ApplicationJson;
+namespace webignition\Tests\HtmlValidator\Body;
 
 use webignition\HtmlValidator\Output\Body\ApplicationJsonParser;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ApplicationJsonParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ApplicationJsonParser
