@@ -27,12 +27,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      * @param array $expectedOutputMessages
      * @param bool $expectedOutputIsValid
      * @param bool $expectedOutputWasAborted
+     * @param int $expectedErrorCount
      */
     public function testParse(
         $fixtureName,
         array $expectedOutputMessages,
         $expectedOutputIsValid,
-        $expectedOutputWasAborted
+        $expectedOutputWasAborted,
+        $expectedErrorCount
     ) {
         $fixture = FixtureLoader::load($fixtureName);
 
@@ -43,6 +45,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedOutputMessages, $output->getMessages());
         $this->assertEquals($expectedOutputIsValid, $output->isValid());
         $this->assertEquals($expectedOutputWasAborted, $output->wasAborted());
+        $this->assertEquals($expectedErrorCount, $output->getErrorCount());
     }
 
     /**
@@ -56,6 +59,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'expectedMessages' => [],
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
+                'expectedErrorCount' => 0,
             ],
             'three errors' => [
                 'fixtureName' => 'ValidatorOutput/3-errors.txt',
@@ -90,6 +94,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => false,
+                'expectedErrorCount' => 3,
             ],
             'validator internal connection timeout error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
@@ -101,6 +106,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
+                'expectedErrorCount' => 1,
             ],
             'validator internal software error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-software-error.txt',
@@ -113,6 +119,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
+                'expectedErrorCount' => null,
             ],
             'validator invalid character encoding error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-character-encoding.txt',
@@ -125,6 +132,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
+                'expectedErrorCount' => 1,
             ],
             'validator invalid content type error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-content-type.txt',
@@ -136,6 +144,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
+                'expectedErrorCount' => 1,
             ],
         ];
     }
