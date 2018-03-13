@@ -30,7 +30,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParse($fixtureName, \stdClass $expectedParserOutput)
     {
-        $fixture = FixtureLoader::load($fixtureName);
+        $fixture = FixtureLoader::loadBodyContent($fixtureName);
 
         $parserOutput = $this->parser->parse($fixture);
         $this->assertEquals($expectedParserOutput, $parserOutput);
@@ -43,7 +43,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'validator internal connection timeout' => [
-                'fixtureName' => 'ValidatorBodyContent/internal-connection-timeout.html',
+                'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
                 'expectedParserOutput' => (object)[
                     'messages' => [
                         (object)[
@@ -56,7 +56,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'validator internal software error' => [
-                'fixtureName' => 'ValidatorBodyContent/internal-software-error.html',
+                'fixtureName' => 'ValidatorOutput/validator-internal-software-error.txt',
                 'expectedParserOutput' => (object)[
                     'messages' => [
                         (object)[
@@ -68,7 +68,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'validator invalid character encoding' => [
-                'fixtureName' => 'ValidatorBodyContent/invalid-character-encoding.html',
+                'fixtureName' => 'ValidatorOutput/validator-invalid-character-encoding.txt',
                 'expectedParserOutput' => (object)[
                     'messages' => [
                         (object)[
@@ -82,7 +82,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'validator invalid content type' => [
-                'fixtureName' => 'ValidatorBodyContent/invalid-content-type.html',
+                'fixtureName' => 'ValidatorOutput/validator-invalid-content-type.txt',
                 'expectedParserOutput' => (object)[
                     'messages' => [
                         (object)[
@@ -93,7 +93,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'validator unknown error; empty html document' => [
-                'fixtureName' => 'ValidatorBodyContent/unknown-error.html',
+                'fixtureName' => 'ValidatorOutput/validator-unknown-error.txt',
                 'expectedParserOutput' => (object)[
                     'messages' => [
                         (object)[
@@ -105,7 +105,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'validator unknown error; empty fatal errors' => [
-                'fixtureName' => 'ValidatorBodyContent/empty-fatal-error.html',
+                'fixtureName' => 'ValidatorOutput/validator-empty-fatal-errors.txt',
                 'expectedParserOutput' => (object)[
                     'messages' => [
                         (object)[

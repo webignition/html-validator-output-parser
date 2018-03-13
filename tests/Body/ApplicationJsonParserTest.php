@@ -42,7 +42,7 @@ class ApplicationJsonParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParse($fixtureName, Configuration $configuration, \stdClass $expectedParserOutput)
     {
-        $fixture = FixtureLoader::load($fixtureName);
+        $fixture = FixtureLoader::loadBodyContent($fixtureName);
         $this->parser->setConfiguration($configuration);
 
         $parserOutput = $this->parser->parse($fixture);
@@ -60,7 +60,7 @@ class ApplicationJsonParserTest extends \PHPUnit_Framework_TestCase
 
         return [
             'no errors' => [
-                'fixtureName' => 'ValidatorBodyContent/0-errors.json',
+                'fixtureName' => 'ValidatorOutput/0-errors.txt',
                 'configuration' => new Configuration(),
                 'expectedParserOutput' => (object)[
                     'url' => 'upload://Form Submission',
@@ -72,7 +72,7 @@ class ApplicationJsonParserTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'two errors; no exclusions' => [
-                'fixtureName' => 'ValidatorBodyContent/2-errors.json',
+                'fixtureName' => 'ValidatorOutput/2-errors.txt',
                 'configuration' => new Configuration(),
                 'expectedParserOutput' => (object)[
                     'url' => 'http://blog.simplytestable.com/',
@@ -103,7 +103,7 @@ class ApplicationJsonParserTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'two errors; exclude ampersand issues' => [
-                'fixtureName' => 'ValidatorBodyContent/2-errors.json',
+                'fixtureName' => 'ValidatorOutput/2-errors.txt',
                 'configuration' => $ignoreAmpersandEncodingIssuesConfiguration,
                 'expectedParserOutput' => (object)[
                     'url' => 'http://blog.simplytestable.com/',

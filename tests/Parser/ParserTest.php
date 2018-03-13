@@ -61,8 +61,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 0,
             ],
-            'three errors' => [
-                'fixtureName' => 'ValidatorOutput/3-errors.txt',
+            'two errors' => [
+                'fixtureName' => 'ValidatorOutput/2-errors.txt',
                 'expectedMessages' => [
                     (object)[
                         'lastLine' => 188,
@@ -82,19 +82,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'type' => 'error',
                         'messageid' => 'html5',
                     ],
-                    (object)[
-                        'lastLine' => 323,
-                        'lastColumn' => 75,
-                        'message' => '& did not start a character reference. '
-                            .'(& probably should have been escaped as &amp;.)',
-                        'explanation' => 'improper ampersand explanation',
-                        'type' => 'error',
-                        'messageid' => 'html5',
-                    ],
                 ],
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => false,
-                'expectedErrorCount' => 3,
+                'expectedErrorCount' => 2,
             ],
             'validator internal connection timeout error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
