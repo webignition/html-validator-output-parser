@@ -1,8 +1,8 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\Body\TextHtml;
+namespace webignition\HtmlValidator\Output\Body;
 
-class Parser
+class TextHtmlParser
 {
     const SOFTWARE_ERROR_HEADING_CONTENT = 'Software error:';
 

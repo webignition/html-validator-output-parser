@@ -2,13 +2,13 @@
 
 namespace webignition\Tests\HtmlValidator\Body\TextHtml;
 
-use webignition\HtmlValidator\Output\Body\TextHtml\Parser;
+use webignition\HtmlValidator\Output\Body\TextHtmlParser;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Parser
+     * @var TextHtmlParser
      */
     private $parser;
 
@@ -19,7 +19,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->parser = new Parser();
+        $this->parser = new TextHtmlParser();
     }
 
     /**

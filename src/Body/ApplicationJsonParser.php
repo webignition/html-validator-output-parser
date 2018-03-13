@@ -1,10 +1,10 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\Body\ApplicationJson;
+namespace webignition\HtmlValidator\Output\Body;
 
 use webignition\HtmlValidator\Output\Parser\Configuration;
 
-class Parser
+class ApplicationJsonParser
 {
     const AMPERSAND_ENCODING_MESSAGE =
         '& did not start a character reference. (& probably should have been escaped as &amp;.)';

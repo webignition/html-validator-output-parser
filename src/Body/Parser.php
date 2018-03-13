@@ -4,8 +4,6 @@ namespace webignition\HtmlValidator\Output\Body;
 
 use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidator\Output\Header\Header;
-use webignition\HtmlValidator\Output\Body\ApplicationJson\Parser as ApplicationJsonParser;
-use webignition\HtmlValidator\Output\Body\TextHtml\Parser as TextHtmlBodyParser;
 
 class Parser
 {
@@ -36,7 +34,7 @@ class Parser
                 break;
 
             case 'text/html':
-                $textHtmlParser = new TextHtmlBodyParser();
+                $textHtmlParser = new TextHtmlParser();
                 $body->setContent($textHtmlParser->parse($htmlValidatorBodyContent));
                 break;
 

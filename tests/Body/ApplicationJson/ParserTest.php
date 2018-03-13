@@ -2,14 +2,14 @@
 
 namespace webignition\Tests\HtmlValidator\Body\ApplicationJson;
 
-use webignition\HtmlValidator\Output\Body\ApplicationJson\Parser;
+use webignition\HtmlValidator\Output\Body\ApplicationJsonParser;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Parser
+     * @var ApplicationJsonParser
      */
     private $parser;
 
@@ -20,7 +20,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->parser = new Parser();
+        $this->parser = new ApplicationJsonParser();
     }
 
     public function testGetConfigurationSetConfiguration()
