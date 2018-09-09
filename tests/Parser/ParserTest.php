@@ -87,6 +87,38 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 2,
             ],
+            'two errors, invalid info message json' => [
+                'fixtureName' => 'ValidatorOutput/2-errors-invalid-info-message.txt',
+                'expectedMessages' => [
+                    (object)[
+                        'message' => '',
+                        'explanation' => 'foo',
+                        'type' => 'info',
+                        'messageid' => 'html5',
+                    ],
+                    (object)[
+                        'lastLine' => 188,
+                        'lastColumn' => 79,
+                        'message' => 'An img element must have an alt attribute, except under certain conditions. '
+                            .'For details, consult guidance on providing text alternatives for images.',
+                        'explanation' => 'image missing alt attribute explanation',
+                        'type' => 'error',
+                        'messageid' => 'html5',
+                    ],
+                    (object)[
+                        'lastLine' => 282,
+                        'lastColumn' => 83,
+                        'message' => '& did not start a character reference. '
+                            .'(& probably should have been escaped as &amp;.)',
+                        'explanation' => 'improper ampersand explanation',
+                        'type' => 'error',
+                        'messageid' => 'html5',
+                    ],
+                ],
+                'expectedOutputIsValid' => false,
+                'expectedOutputWasAborted' => false,
+                'expectedErrorCount' => 2,
+            ],
             'validator internal connection timeout error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
                 'expectedMessages' => [

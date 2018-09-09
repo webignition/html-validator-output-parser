@@ -15,11 +15,6 @@ class ApplicationJsonParser
     private $configuration;
 
     /**
-     * @var string
-     */
-    private $htmlValidatorBodyContent = null;
-
-    /**
      * @param Configuration $configuration
      */
     public function setConfiguration(Configuration $configuration)
@@ -46,7 +41,7 @@ class ApplicationJsonParser
      */
     public function parse($htmlValidatorBodyContent)
     {
-        $this->htmlValidatorBodyContent = $htmlValidatorBodyContent;
+        $htmlValidatorBodyContent = $this->fixInvalidJson($htmlValidatorBodyContent);
 
         $parsedBody = json_decode($htmlValidatorBodyContent);
         $messages = $parsedBody->messages;
@@ -77,5 +72,17 @@ class ApplicationJsonParser
         }
 
         return false;
+    }
+
+    private function fixInvalidJson($htmlValidatorBodyContent)
+    {
+        $emptyMessage = '"message": ,';
+        $nonEmptyMessage = '"message": "",';
+
+        if (substr_count($htmlValidatorBodyContent, $emptyMessage)) {
+            $htmlValidatorBodyContent = str_replace($emptyMessage, $nonEmptyMessage, $htmlValidatorBodyContent);
+        }
+
+        return $htmlValidatorBodyContent;
     }
 }
