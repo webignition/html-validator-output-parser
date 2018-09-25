@@ -5,7 +5,7 @@ namespace webignition\Tests\HtmlValidator\Body;
 use webignition\HtmlValidator\Output\Body\Parser;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Parser

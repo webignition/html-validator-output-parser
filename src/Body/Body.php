@@ -9,38 +9,24 @@ class Body
      */
     private $content = null;
 
-    /**
-     * @param \stdClass $content
-     *
-     * @return Body
-     */
-    public function setContent(\stdClass $content)
+    public function setContent(\stdClass $content): Body
     {
         $this->content = $content;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasContent()
+    public function hasContent(): bool
     {
         return !is_null($this->content);
     }
 
-    /**
-     * @return \stdClass
-     */
-    public function getContent()
+    public function getContent(): \stdClass
     {
         return $this->content;
     }
 
-    /**
-     * @return array
-     */
-    public function getMessages()
+    public function getMessages(): array
     {
         if (!$this->hasContent()) {
             return [];

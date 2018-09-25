@@ -2,12 +2,9 @@
 
 namespace webignition\Tests\HtmlValidator\Parser;
 
-use webignition\HtmlValidator\Output\Output;
 use webignition\HtmlValidator\Output\Parser\Configuration;
-use webignition\HtmlValidator\Output\Parser\Parser;
-use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Configuration
@@ -19,7 +16,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        parent::setUp(); //
+        parent::setUp();
 
         $this->configuration = new Configuration();
     }

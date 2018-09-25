@@ -5,7 +5,7 @@ namespace webignition\Tests\HtmlValidator\Body;
 use webignition\HtmlValidator\Output\Body\TextHtmlParser;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
-class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
+class TextHtmlParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TextHtmlParser
@@ -36,10 +36,7 @@ class TextHtmlParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedParserOutput, $parserOutput);
     }
 
-    /**
-     * @return array
-     */
-    public function parseDataProvider()
+    public function parseDataProvider(): array
     {
         return [
             'validator internal connection timeout' => [

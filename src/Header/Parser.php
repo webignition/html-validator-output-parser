@@ -8,7 +8,7 @@ class Parser
 {
     const W3C_VALIDATOR_HEADER_PREFIX = 'X-W3C-Validator-';
 
-    public function parse($htmlValidatorHeaderContent)
+    public function parse(string $htmlValidatorHeaderContent): Header
     {
         $header = new Header();
 
@@ -33,22 +33,12 @@ class Parser
         return $header;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    private function isW3cValidatorHeaderKey($key)
+    private function isW3cValidatorHeaderKey(string $key): bool
     {
         return substr($key, 0, strlen(self::W3C_VALIDATOR_HEADER_PREFIX)) == self::W3C_VALIDATOR_HEADER_PREFIX;
     }
 
-    /**
-     * @param string $w3cKey
-     *
-     * @return string
-     */
-    private function getKeyFromW3cKey($w3cKey)
+    private function getKeyFromW3cKey(string $w3cKey): string
     {
         return lcfirst(str_replace(self::W3C_VALIDATOR_HEADER_PREFIX, '', $w3cKey));
     }
@@ -58,7 +48,7 @@ class Parser
      *
      * @return mixed
      */
-    private function getTypedValueFromW3cValue($w3cValue)
+    private function getTypedValueFromW3cValue(string $w3cValue)
     {
         if (ctype_digit($w3cValue)) {
             return (int)$w3cValue;
@@ -67,12 +57,7 @@ class Parser
         return $w3cValue;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    private function isContentTypeHeader($key)
+    private function isContentTypeHeader(string $key): bool
     {
         return strtolower($key) == 'content-type';
     }

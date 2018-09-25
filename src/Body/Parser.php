@@ -15,13 +15,7 @@ class Parser
      */
     private $configuration;
 
-    /**
-     * @param Header $header
-     * @param string $htmlValidatorBodyContent
-     *
-     * @return Body
-     */
-    public function parse(Header $header, $htmlValidatorBodyContent)
+    public function parse(Header $header, string $htmlValidatorBodyContent): Body
     {
         $body = new Body();
 
@@ -48,18 +42,12 @@ class Parser
         return $body;
     }
 
-    /**
-     * @param Configuration $configuration
-     */
     public function setConfiguration(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
 
-    /**
-     * @return Configuration
-     */
-    public function getConfiguration()
+    public function getConfiguration(): Configuration
     {
         if (is_null($this->configuration)) {
             $this->configuration = new Configuration();

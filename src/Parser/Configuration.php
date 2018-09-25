@@ -9,30 +9,21 @@ class Configuration
      */
     private $ignoreAmpersandEncodingIssues = false;
 
-    /**
-     * @return Configuration
-     */
-    public function enableIgnoreAmpersandEncodingIssues()
+    public function enableIgnoreAmpersandEncodingIssues(): Configuration
     {
         $this->ignoreAmpersandEncodingIssues = true;
 
         return $this;
     }
 
-    /**
-     * @return Configuration
-     */
-    public function disableIgnoreAmpersandEncodingIssues()
+    public function disableIgnoreAmpersandEncodingIssues(): Configuration
     {
         $this->ignoreAmpersandEncodingIssues = false;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIgnoreAmpersandEncodingIssues()
+    public function getIgnoreAmpersandEncodingIssues(): bool
     {
         return $this->ignoreAmpersandEncodingIssues;
     }
