@@ -14,18 +14,12 @@ class ApplicationJsonParser
      */
     private $configuration;
 
-    /**
-     * @param Configuration $configuration
-     */
     public function setConfiguration(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
 
-    /**
-     * @return Configuration
-     */
-    public function getConfiguration()
+    public function getConfiguration(): Configuration
     {
         if (is_null($this->configuration)) {
             $this->configuration = new Configuration();
@@ -34,12 +28,7 @@ class ApplicationJsonParser
         return $this->configuration;
     }
 
-    /**
-     * @param string $htmlValidatorBodyContent
-     *
-     * @return \stdClass
-     */
-    public function parse($htmlValidatorBodyContent)
+    public function parse(string $htmlValidatorBodyContent): \stdClass
     {
         $htmlValidatorBodyContent = $this->fixInvalidJson($htmlValidatorBodyContent);
 
@@ -57,12 +46,7 @@ class ApplicationJsonParser
         return $parsedBody;
     }
 
-    /**
-     * @param \stdClass $message
-     *
-     * @return bool
-     */
-    private function isMessageToBeExcluded($message)
+    private function isMessageToBeExcluded(\stdClass $message): bool
     {
         $configuration = $this->getConfiguration();
         $ignoreAmpersandEncodingIssues = $configuration->getIgnoreAmpersandEncodingIssues();
@@ -74,7 +58,7 @@ class ApplicationJsonParser
         return false;
     }
 
-    private function fixInvalidJson($htmlValidatorBodyContent)
+    private function fixInvalidJson(string $htmlValidatorBodyContent): string
     {
         $emptyMessage = '"message": ,';
         $nonEmptyMessage = '"message": "",';

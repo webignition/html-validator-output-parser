@@ -48,10 +48,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedErrorCount, $output->getErrorCount());
     }
 
-    /**
-     * @return array
-     */
-    public function parseDataProvider()
+    public function parseDataProvider(): array
     {
         return [
             'no errors' => [

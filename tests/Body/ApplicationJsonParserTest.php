@@ -50,10 +50,7 @@ class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedParserOutput, $parserOutput);
     }
 
-    /**
-     * @return array
-     */
-    public function parseDataProvider()
+    public function parseDataProvider(): array
     {
         $ignoreAmpersandEncodingIssuesConfiguration = new Configuration();
         $ignoreAmpersandEncodingIssuesConfiguration->enableIgnoreAmpersandEncodingIssues();

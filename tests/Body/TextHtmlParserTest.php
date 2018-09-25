@@ -36,10 +36,7 @@ class TextHtmlParserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedParserOutput, $parserOutput);
     }
 
-    /**
-     * @return array
-     */
-    public function parseDataProvider()
+    public function parseDataProvider(): array
     {
         return [
             'validator internal connection timeout' => [

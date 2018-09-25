@@ -11,6 +11,7 @@ class Header
 
     /**
      * @param string $key
+     *
      * @param mixed $value
      */
     public function set($key, $value)
@@ -20,6 +21,7 @@ class Header
 
     /**
      * @param string $key
+     *
      * @return mixed|null
      */
     public function get($key)

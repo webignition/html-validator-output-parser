@@ -7,12 +7,7 @@ class HeaderBodySeparator
     const PART_HEADER = 'header';
     const PART_BODY = 'body';
 
-    /**
-     * @param string $htmlValidatorOutput
-     *
-     * @return array
-     */
-    public static function separate($htmlValidatorOutput)
+    public static function separate(string $htmlValidatorOutput): array
     {
         $headerBody = explode("\n\n", str_replace("\r\n", "\n", $htmlValidatorOutput), 2);
 

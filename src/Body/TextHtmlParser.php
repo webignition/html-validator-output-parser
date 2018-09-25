@@ -21,7 +21,7 @@ class TextHtmlParser
      *
      * @return null|\stdClass
      */
-    public function parse($htmlValidatorBodyContent)
+    public function parse(string $htmlValidatorBodyContent)
     {
         $this->htmlValidatorBodyContent = $htmlValidatorBodyContent;
 
@@ -40,10 +40,7 @@ class TextHtmlParser
         return $this->getValidatorUnknownErrorOutputObject();
     }
 
-    /**
-     * @return \DOMDocument
-     */
-    private function getDom()
+    private function getDom(): \DOMDocument
     {
         if (is_null($this->dom)) {
             $this->dom = new \DOMDocument();
@@ -53,10 +50,7 @@ class TextHtmlParser
         return $this->dom;
     }
 
-    /**
-     * @return bool
-     */
-    private function hasFatalErrorsCollection()
+    private function hasFatalErrorsCollection(): bool
     {
         return !is_null($this->getFatalErrorsCollection());
     }
@@ -69,15 +63,12 @@ class TextHtmlParser
         return $this->getDom()->getElementById('fatal-errors');
     }
 
-    /**
-     * @return bool
-     */
-    private function isValidatorSoftwareError()
+    private function isValidatorSoftwareError(): bool
     {
         $levelOneHeading = $this->getLevelOneHeading();
 
         if (empty($levelOneHeading)) {
-            return null;
+            return false;
         }
 
         return $this->getLevelOneHeading()->textContent === self::SOFTWARE_ERROR_HEADING_CONTENT;
@@ -98,10 +89,7 @@ class TextHtmlParser
         return $levelOneHeadings->item(0);
     }
 
-    /**
-     * @return bool
-     */
-    private function isCharacterEncodingError()
+    private function isCharacterEncodingError(): bool
     {
         if (!$this->hasFatalErrorsCollection()) {
             return false;
@@ -116,10 +104,7 @@ class TextHtmlParser
         return substr_count($message->message, 'contained one or more bytes that I cannot interpret') === 1;
     }
 
-    /**
-     * @return \stdClass
-     */
-    private function getValidatorInternalErrorOutputObject()
+    private function getValidatorInternalErrorOutputObject(): \stdClass
     {
         $outputObject = new \stdClass();
         $outputObject->messages = array();
@@ -133,10 +118,7 @@ class TextHtmlParser
         return $outputObject;
     }
 
-    /**
-     * @return \stdClass
-     */
-    private function getCharacterEncodingErrorOutputObject()
+    private function getCharacterEncodingErrorOutputObject(): \stdClass
     {
         $fatalErrorCollectionOutputObject = $this->getFatalErrorCollectionOutputObject();
         $message = $fatalErrorCollectionOutputObject->messages[0]->message;
@@ -154,10 +136,7 @@ class TextHtmlParser
         return $outputObject;
     }
 
-    /**
-     * @return \stdClass
-     */
-    private function getValidatorUnknownErrorOutputObject()
+    private function getValidatorUnknownErrorOutputObject(): \stdClass
     {
         $outputObject = new \stdClass();
         $outputObject->messages = array();
@@ -172,10 +151,7 @@ class TextHtmlParser
         return $outputObject;
     }
 
-    /**
-     * @return \stdClass
-     */
-    private function getFatalErrorCollectionOutputObject()
+    private function getFatalErrorCollectionOutputObject(): \stdClass
     {
         $errorContainers = $this->getFatalErrorsCollection()->getElementsByTagName('li');
 
