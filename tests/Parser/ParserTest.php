@@ -6,7 +6,7 @@ use webignition\HtmlValidator\Output\Output;
 use webignition\HtmlValidator\Output\Parser\Parser;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends \PHPUnit\Framework\TestCase
 {
     public function testParseInvalidOutputContentType()
     {

@@ -6,7 +6,7 @@ use webignition\HtmlValidator\Output\Body\ApplicationJsonParser;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
-class ApplicationJsonParserTest extends \PHPUnit_Framework_TestCase
+class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ApplicationJsonParser

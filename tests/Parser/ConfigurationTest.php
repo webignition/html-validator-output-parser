@@ -7,7 +7,7 @@ use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidator\Output\Parser\Parser;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Configuration
