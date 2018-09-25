@@ -13,9 +13,9 @@ class Parser
      */
     private $configuration;
 
-    public function __construct($configurationValues = [])
+    public function __construct(array $configurationValues = [])
     {
-        $this->configuration = Configuration::create($configurationValues);
+        $this->configuration = new Configuration($configurationValues);
     }
 
     public function parse(string $htmlValidatorOutput): Output
@@ -25,8 +25,7 @@ class Parser
         $headerParser = new HeaderParser();
         $header = $headerParser->parse($headerBodyParts[HeaderBodySeparator::PART_HEADER]);
 
-        $bodyParser = new BodyParser();
-        $bodyParser->setConfiguration($this->getConfiguration());
+        $bodyParser = new BodyParser($this->configuration);
         $body = $bodyParser->parse($header, $headerBodyParts[HeaderBodySeparator::PART_BODY]);
 
         if (empty($body->getMessages()) && Output::STATUS_INVALID === $header->get('status')) {
@@ -36,10 +35,5 @@ class Parser
         $output = new Output($header, $body);
 
         return $output;
-    }
-
-    public function getConfiguration(): Configuration
-    {
-        return $this->configuration;
     }
 }

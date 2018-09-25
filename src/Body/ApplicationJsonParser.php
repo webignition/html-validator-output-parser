@@ -12,33 +12,13 @@ class ApplicationJsonParser
         '& did not start a character reference. (& probably should have been escaped as &amp;.)';
 
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * @var MessageExcluder
      */
     private $messageExcluder;
 
-    public function __construct()
+    public function __construct(Configuration $configuration)
     {
-        $this->messageExcluder = Factory::create();
-    }
-
-    public function setConfiguration(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
         $this->messageExcluder = Factory::create($configuration);
-    }
-
-    public function getConfiguration(): Configuration
-    {
-        if (is_null($this->configuration)) {
-            $this->configuration = new Configuration();
-        }
-
-        return $this->configuration;
     }
 
     /**
