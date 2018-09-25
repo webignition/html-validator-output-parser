@@ -2,6 +2,8 @@
 
 namespace webignition\HtmlValidator\Output\Body;
 
+use webignition\HtmlValidator\Output\MessageExcluder\Factory;
+use webignition\HtmlValidator\Output\MessageExcluder\MessageExcluder;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 
 class ApplicationJsonParser
@@ -14,9 +16,20 @@ class ApplicationJsonParser
      */
     private $configuration;
 
+    /**
+     * @var MessageExcluder
+     */
+    private $messageExcluder;
+
+    public function __construct()
+    {
+        $this->messageExcluder = Factory::create();
+    }
+
     public function setConfiguration(Configuration $configuration)
     {
         $this->configuration = $configuration;
+        $this->messageExcluder = Factory::create($configuration);
     }
 
     public function getConfiguration(): Configuration
@@ -28,6 +41,11 @@ class ApplicationJsonParser
         return $this->configuration;
     }
 
+    /**
+     * @param string $htmlValidatorBodyContent
+     *
+     * @return \stdClass
+     */
     public function parse(string $htmlValidatorBodyContent): \stdClass
     {
         $htmlValidatorBodyContent = $this->fixInvalidJson($htmlValidatorBodyContent);
@@ -36,7 +54,7 @@ class ApplicationJsonParser
         $messages = $parsedBody->messages;
 
         foreach ($messages as $index => $message) {
-            if ($this->isMessageToBeExcluded($message)) {
+            if ($this->messageExcluder->isMessageExcluded($message)) {
                 unset($messages[$index]);
             }
         }
@@ -44,18 +62,6 @@ class ApplicationJsonParser
         $parsedBody->messages = $messages;
 
         return $parsedBody;
-    }
-
-    private function isMessageToBeExcluded(\stdClass $message): bool
-    {
-        $configuration = $this->getConfiguration();
-        $ignoreAmpersandEncodingIssues = $configuration->getIgnoreAmpersandEncodingIssues();
-
-        if (self::AMPERSAND_ENCODING_MESSAGE === $message->message && $ignoreAmpersandEncodingIssues) {
-            return true;
-        }
-
-        return false;
     }
 
     private function fixInvalidJson(string $htmlValidatorBodyContent): string
