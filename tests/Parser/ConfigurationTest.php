@@ -21,14 +21,54 @@ class ConfigurationTest extends \PHPUnit\Framework\TestCase
         $this->configuration = new Configuration();
     }
 
-    public function testIgnoreAmpersandEncodingIssues()
+    /**
+     * @dataProvider createConfigurationDataProvider
+     *
+     * @param array $configurationValues
+     * @param bool $expectedIgnoreAmpersandEncodingIssues
+     * @param bool $expectedIgnoreCssValidationIssues
+     */
+    public function testCreateConfiguration(
+        array $configurationValues,
+        bool $expectedIgnoreAmpersandEncodingIssues,
+        bool $expectedIgnoreCssValidationIssues
+    ) {
+        $configuration = new Configuration($configurationValues);
+
+        $this->assertEquals($expectedIgnoreAmpersandEncodingIssues, $configuration->getIgnoreAmpersandEncodingIssues());
+        $this->assertEquals($expectedIgnoreCssValidationIssues, $configuration->getIgnoreCssValidationIssues());
+    }
+
+    public function createConfigurationDataProvider(): array
     {
-        $this->assertFalse($this->configuration->getIgnoreAmpersandEncodingIssues());
-
-        $this->configuration->enableIgnoreAmpersandEncodingIssues();
-        $this->assertTrue($this->configuration->getIgnoreAmpersandEncodingIssues());
-
-        $this->configuration->disableIgnoreAmpersandEncodingIssues();
-        $this->assertFalse($this->configuration->getIgnoreAmpersandEncodingIssues());
+        return [
+            'default' => [
+                'configurationValues' => [],
+                'expectedIgnoreAmpersandEncodingIssues' => false,
+                'expectedIgnoreCssValidationIssues' => false,
+            ],
+            'ignore ampersand encoding issues only' => [
+                'configurationValues' => [
+                    Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
+                ],
+                'expectedIgnoreAmpersandEncodingIssues' => true,
+                'expectedIgnoreCssValidationIssues' => false,
+            ],
+            'ignore css validation issues only' => [
+                'configurationValues' => [
+                    Configuration::KEY_CSS_VALIDATION_ISSUES => true,
+                ],
+                'expectedIgnoreAmpersandEncodingIssues' => false,
+                'expectedIgnoreCssValidationIssues' => true,
+            ],
+            'ignore ampersand encoding issues, ignore css validation issues only' => [
+                'configurationValues' => [
+                    Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
+                    Configuration::KEY_CSS_VALIDATION_ISSUES => true,
+                ],
+                'expectedIgnoreAmpersandEncodingIssues' => true,
+                'expectedIgnoreCssValidationIssues' => true,
+            ],
+        ];
     }
 }

@@ -15,14 +15,18 @@ class Parser
      */
     private $configuration;
 
+    public function __construct(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
     public function parse(Header $header, string $htmlValidatorBodyContent): Body
     {
         $body = new Body();
 
         switch ($header->get('content-type')->getTypeSubtypeString()) {
             case 'application/json':
-                $applicationJsonParser = new ApplicationJsonParser();
-                $applicationJsonParser->setConfiguration($this->getConfiguration());
+                $applicationJsonParser = new ApplicationJsonParser($this->configuration);
 
                 $body->setContent($applicationJsonParser->parse($htmlValidatorBodyContent));
                 break;
@@ -40,19 +44,5 @@ class Parser
         }
 
         return $body;
-    }
-
-    public function setConfiguration(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    public function getConfiguration(): Configuration
-    {
-        if (is_null($this->configuration)) {
-            $this->configuration = new Configuration();
-        }
-
-        return $this->configuration;
     }
 }

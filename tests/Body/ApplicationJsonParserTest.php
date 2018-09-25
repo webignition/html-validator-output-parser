@@ -9,31 +9,6 @@ use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var ApplicationJsonParser
-     */
-    private $parser;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->parser = new ApplicationJsonParser();
-    }
-
-    public function testGetConfigurationSetConfiguration()
-    {
-        $configuration = new Configuration();
-
-        $this->assertNotEquals(spl_object_hash($configuration), spl_object_hash($this->parser->getConfiguration()));
-
-        $this->parser->setConfiguration($configuration);
-        $this->assertEquals(spl_object_hash($configuration), spl_object_hash($this->parser->getConfiguration()));
-    }
-
-    /**
      * @dataProvider parseDataProvider
      *
      * @param $fixtureName
@@ -42,19 +17,17 @@ class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testParse($fixtureName, Configuration $configuration, \stdClass $expectedParserOutput)
     {
-        $fixture = FixtureLoader::loadBodyContent($fixtureName);
-        $this->parser->setConfiguration($configuration);
+        $parser = new ApplicationJsonParser($configuration);
 
-        $parserOutput = $this->parser->parse($fixture);
+        $fixture = FixtureLoader::loadBodyContent($fixtureName);
+
+        $parserOutput = $parser->parse($fixture);
 
         $this->assertEquals($expectedParserOutput, $parserOutput);
     }
 
     public function parseDataProvider(): array
     {
-        $ignoreAmpersandEncodingIssuesConfiguration = new Configuration();
-        $ignoreAmpersandEncodingIssuesConfiguration->enableIgnoreAmpersandEncodingIssues();
-
         return [
             'no errors' => [
                 'fixtureName' => 'ValidatorOutput/0-errors.txt',
@@ -101,7 +74,9 @@ class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
             ],
             'two errors; exclude ampersand issues' => [
                 'fixtureName' => 'ValidatorOutput/2-errors.txt',
-                'configuration' => $ignoreAmpersandEncodingIssuesConfiguration,
+                'configuration' => new Configuration([
+                    Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
+                ]),
                 'expectedParserOutput' => (object)[
                     'url' => 'http://blog.simplytestable.com/',
                     'messages' => [
