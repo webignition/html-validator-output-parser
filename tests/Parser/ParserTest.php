@@ -3,6 +3,7 @@
 namespace webignition\Tests\HtmlValidator\Parser;
 
 use webignition\HtmlValidator\Output\Output;
+use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidator\Output\Parser\Parser;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
@@ -24,6 +25,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
      * @dataProvider parseDataProvider
      *
      * @param string $fixtureName
+     * @param array $configurationValues
      * @param array $expectedOutputMessages
      * @param bool $expectedOutputIsValid
      * @param bool $expectedOutputWasAborted
@@ -31,6 +33,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testParse(
         $fixtureName,
+        array $configurationValues,
         array $expectedOutputMessages,
         $expectedOutputIsValid,
         $expectedOutputWasAborted,
@@ -38,7 +41,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     ) {
         $fixture = FixtureLoader::load($fixtureName);
 
-        $parser = new Parser();
+        $parser = new Parser($configurationValues);
         $output = $parser->parse($fixture);
 
         $this->assertInstanceOf(Output::class, $output);
@@ -53,6 +56,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         return [
             'no errors' => [
                 'fixtureName' => 'ValidatorOutput/0-errors.txt',
+                'configurationValues' => [],
                 'expectedMessages' => [],
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
@@ -60,6 +64,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'two errors' => [
                 'fixtureName' => 'ValidatorOutput/2-errors.txt',
+                'configurationValues' => [],
                 'expectedMessages' => [
                     (object)[
                         'lastLine' => 188,
@@ -84,8 +89,29 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 2,
             ],
+            'two errors, ignore ampersand encoding issues' => [
+                'fixtureName' => 'ValidatorOutput/2-errors.txt',
+                'configurationValues' => [
+                    Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
+                ],
+                'expectedMessages' => [
+                    (object)[
+                        'lastLine' => 188,
+                        'lastColumn' => 79,
+                        'message' => 'An img element must have an alt attribute, except under certain conditions. '
+                            .'For details, consult guidance on providing text alternatives for images.',
+                        'explanation' => 'image missing alt attribute explanation',
+                        'type' => 'error',
+                        'messageid' => 'html5',
+                    ],
+                ],
+                'expectedOutputIsValid' => false,
+                'expectedOutputWasAborted' => false,
+                'expectedErrorCount' => 1,
+            ],
             'two errors, invalid info message json' => [
                 'fixtureName' => 'ValidatorOutput/2-errors-invalid-info-message.txt',
+                'configurationValues' => [],
                 'expectedMessages' => [
                     (object)[
                         'message' => '',
@@ -118,6 +144,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator internal connection timeout error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
+                'configurationValues' => [],
                 'expectedMessages' => [
                     (object)[
                         'message' => FixtureLoader::load('ExpectedMessage/validator-internal-connection-timeout.txt'),
@@ -130,6 +157,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator internal software error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-software-error.txt',
+                'configurationValues' => [],
                 'expectedMessages' => [
                     (object)[
                         'message' => 'Sorry, this document can\'t be checked',
@@ -143,6 +171,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator invalid character encoding error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-character-encoding.txt',
+                'configurationValues' => [],
                 'expectedMessages' => [
                     (object)[
                         'message' => FixtureLoader::load('ExpectedMessage/validator-invalid-character-encoding.txt'),
@@ -156,6 +185,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator invalid content type error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-content-type.txt',
+                'configurationValues' => [],
                 'expectedMessages' => [
                     (object)[
                         'message' => FixtureLoader::load('ExpectedMessage/validator-invalid-content-type.txt'),
@@ -165,6 +195,26 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
                 'expectedErrorCount' => 1,
+            ],
+            'css errors only, ignore css validation issues' => [
+                'fixtureName' => 'ValidatorOutput/css-errors-only.txt',
+                'configurationValues' => [
+                    Configuration::KEY_CSS_VALIDATION_ISSUES => true,
+                ],
+                'expectedMessages' => [],
+                'expectedOutputIsValid' => true,
+                'expectedOutputWasAborted' => false,
+                'expectedErrorCount' => 0,
+            ],
+            'ampersand encoding issues only, ignore ampersand encoding issues' => [
+                'fixtureName' => 'ValidatorOutput/ampersand-encoding-issues-only.txt',
+                'configurationValues' => [
+                    Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
+                ],
+                'expectedMessages' => [],
+                'expectedOutputIsValid' => true,
+                'expectedOutputWasAborted' => false,
+                'expectedErrorCount' => 0,
             ],
         ];
     }

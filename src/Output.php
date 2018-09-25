@@ -8,6 +8,7 @@ use webignition\HtmlValidator\Output\Body\Body;
 class Output
 {
     const STATUS_VALID = 'Valid';
+    const STATUS_INVALID = 'Invalid';
     const STATUS_ABORT = 'Abort';
     const TYPE_ERROR = 'error';
 
