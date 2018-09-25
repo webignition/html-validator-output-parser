@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c5a19be5fd082815a599929ffe56fe6",
+    "content-hash": "284ec472b772ea987005ff16a8741694",
     "packages": [
         {
             "name": "webignition/disallowed-character-terminated-string",
@@ -1704,7 +1704,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7"
+        "php": ">=7.2"
     },
     "platform-dev": []
 }
