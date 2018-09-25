@@ -15,6 +15,11 @@ class Parser
 
     public function __construct(array $configurationValues = [])
     {
+        $this->configure($configurationValues);
+    }
+
+    public function configure(array $configurationValues)
+    {
         $this->configuration = new Configuration($configurationValues);
     }
 

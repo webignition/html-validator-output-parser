@@ -218,4 +218,35 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
+
+    public function testConfigure()
+    {
+        $fixture = FixtureLoader::load('ValidatorOutput/ampersand-encoding-issues-only.txt');
+
+        $parser = new Parser();
+        $output = $parser->parse($fixture);
+
+        $this->assertEquals([
+            (object)[
+                'lastLine' => 282,
+                'lastColumn' => 83,
+                'message' => '& did not start a character reference. '
+                    .'(& probably should have been escaped as &amp;.)',
+                'explanation' => 'improper ampersand explanation',
+                'type' => 'error',
+                'messageid' => 'html5',
+            ],
+        ], $output->getMessages());
+        $this->assertEquals(false, $output->isValid());
+        $this->assertEquals(1, $output->getErrorCount());
+
+        $parser->configure([
+            Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
+        ]);
+
+        $output = $parser->parse($fixture);
+        $this->assertEquals([], $output->getMessages());
+        $this->assertEquals(true, $output->isValid());
+        $this->assertEquals(0, $output->getErrorCount());
+    }
 }
