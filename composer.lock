@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "788a419673f58044f6c088ed89b09685",
+    "content-hash": "803a16f893549859ccf3c6f6ad5b9896",
     "packages": [
         {
             "name": "webignition/disallowed-character-terminated-string",
@@ -49,16 +49,16 @@
         },
         {
             "name": "webignition/html-validator-output-models",
-            "version": "0.3",
+            "version": "0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/html-validator-output-models.git",
-                "reference": "f9e026146d7d21a2e1d429d1b15e2060de158d6e"
+                "reference": "b276e50c5cc3ffda75e06784770adc9415cb5629"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/html-validator-output-models/zipball/f9e026146d7d21a2e1d429d1b15e2060de158d6e",
-                "reference": "f9e026146d7d21a2e1d429d1b15e2060de158d6e",
+                "url": "https://api.github.com/repos/webignition/html-validator-output-models/zipball/b276e50c5cc3ffda75e06784770adc9415cb5629",
+                "reference": "b276e50c5cc3ffda75e06784770adc9415cb5629",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "output",
                 "validator"
             ],
-            "time": "2019-01-29T16:26:46+00:00"
+            "time": "2019-01-29T18:51:48+00:00"
         },
         {
             "name": "webignition/internet-media-type",
