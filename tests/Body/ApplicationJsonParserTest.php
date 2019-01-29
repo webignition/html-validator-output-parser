@@ -25,8 +25,6 @@ class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
             array_values($expectedMessages->getMessages()),
             array_values($messages->getMessages())
         );
-
-//        var_dump($messages);
     }
 
     public function parseDataProvider(): array
