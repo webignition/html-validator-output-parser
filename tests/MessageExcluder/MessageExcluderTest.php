@@ -4,27 +4,22 @@
 namespace webignition\Tests\HtmlValidator\Output\MessageExcluder;
 
 use webignition\HtmlValidator\Output\MessageExcluder\MessageExcluder;
-use webignition\HtmlValidator\Output\Parser\Configuration;
-use webignition\HtmlValidator\Output\Parser\Parser;
-use webignition\HtmlValidator\Output\Parser\InvalidContentTypeException;
-use webignition\HtmlValidatorOutput\Models\Output;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
-use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
 
 class MessageExcluderTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @dataProvider isMessageExcludedDataProvider
+     * @dataProvider isExcludedDataProvider
      */
-    public function testIsMessageExcluded(
+    public function testIsExcluded(
         MessageExcluder $messageExcluder,
         ValidationErrorMessage $message,
         bool $expectedIsExcluded
     ) {
-        $this->assertEquals($expectedIsExcluded, $messageExcluder->isMessageExcluded($message));
+        $this->assertEquals($expectedIsExcluded, $messageExcluder->isExcluded($message));
     }
 
-    public function isMessageExcludedDataProvider(): array
+    public function isExcludedDataProvider(): array
     {
         return [
             'ampersand encoding issue; ignoreAmpersandEncodingIssues=false' => [

@@ -32,7 +32,7 @@ class MessageExcluder
         $this->ignoreCssValidationIssues = $ignoreCssValidationIssues;
     }
 
-    public function isMessageExcluded(ValidationErrorMessage $message): bool
+    public function isExcluded(ValidationErrorMessage $message): bool
     {
         if ($this->ignoreAmpersandEncodingIssues && self::AMPERSAND_ENCODING_MESSAGE === $message->getMessage()) {
             return true;
