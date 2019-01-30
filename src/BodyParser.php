@@ -1,14 +1,13 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\Body;
+namespace webignition\HtmlValidatorOutput\Parser;
 
-use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidator\Output\Parser\HeaderValues;
 use webignition\HtmlValidator\Output\Parser\InvalidContentTypeException;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\ValidatorMessage\MessageList;
 
-class Parser
+class BodyParser
 {
     const APPLICATION_JSON_CONTENT_TYPE = 'application/json';
     const TEXT_HTML_CONTENT_TYPE = 'text/html';
