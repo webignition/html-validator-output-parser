@@ -19,28 +19,13 @@ class Parser
 
     const CSS_ERROR_MESSAGE_PATTERN = '/^CSS:/';
 
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(array $configurationValues = [])
-    {
-        $this->configure($configurationValues);
-    }
-
-    public function configure(array $configurationValues)
-    {
-        $this->configuration = new Configuration($configurationValues);
-    }
-
-    public function parse(string $htmlValidatorOutput): Output
+    public function parse(string $htmlValidatorOutput, int $flags = Flags::NONE): Output
     {
         $headerBodyParts = HeaderBodySeparator::separate($htmlValidatorOutput);
 
         $headerValues = $this->parseHeaderValues($headerBodyParts['header']);
         $messages = $this->parseBody($headerValues->getContentType(), $headerBodyParts[HeaderBodySeparator::PART_BODY]);
-        $messages = $this->filter($messages);
+        $messages = $this->filter($messages, $flags);
 
         $output = new Output($messages);
 
@@ -126,10 +111,10 @@ class Parser
         throw new InvalidContentTypeException($contentTypeString);
     }
 
-    private function filter(MessageList $messageList)
+    private function filter(MessageList $messageList, int $flags)
     {
-        $ignoreAmpersandEncodingIssues = $this->configuration->getIgnoreAmpersandEncodingIssues();
-        $ignoreCssValidationIssues = $this->configuration->getIgnoreCssValidationIssues();
+        $ignoreAmpersandEncodingIssues = $flags & Flags::IGNORE_AMPERSAND_ENCODING_ISSUES;
+        $ignoreCssValidationIssues = $flags & Flags::IGNORE_CSS_VALIDATION_ISSUES;
 
         return $messageList->filter(function (
             $message
