@@ -45,7 +45,7 @@ class Parser
             }
 
             if ('text/html' === $contentTypeString) {
-                $textHtmlParser = new TextHtmlParser();
+                $textHtmlParser = new TextHtmlBodyParser();
 
                 return $textHtmlParser->parse($content);
             }
