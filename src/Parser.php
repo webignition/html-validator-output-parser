@@ -3,6 +3,8 @@
 namespace webignition\HtmlValidatorOutput\Parser;
 
 use webignition\HtmlValidatorOutput\Models\Output;
+use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
+use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
 use webignition\InternetMediaType\Parameter\Parser\AttributeParserException;
 use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 use webignition\InternetMediaType\Parser\SubtypeParserException;
@@ -34,6 +36,19 @@ class Parser
         $headerValues = $this->parseHeaderValues($headerBodyParts['header']);
         $messages = $this->parseBody($headerValues->getContentType(), $headerBodyParts[HeaderBodySeparator::PART_BODY]);
 
+        $messageExcluder = MessageExcluderFactory::create($this->configuration);
+        $filteredMessages = [];
+
+        foreach ($messages->getMessages() as $message) {
+            $isIncluded = $message instanceof ValidatorErrorMessage ||
+                $message instanceof ValidationErrorMessage && !$messageExcluder->isExcluded($message);
+
+            if ($isIncluded) {
+                $filteredMessages[] = $message;
+            }
+        }
+
+        $messages = new MessageList($filteredMessages);
         $output = new Output($messages);
 
         if ($headerValues->getWasAborted()) {
@@ -104,7 +119,7 @@ class Parser
         $contentTypeString = $contentType->getTypeSubtypeString();
 
         if ('application/json' === $contentTypeString) {
-            $applicationJsonParser = new ApplicationJsonBodyParser($this->configuration);
+            $applicationJsonParser = new ApplicationJsonBodyParser();
 
             return $applicationJsonParser->parse($body);
         }
