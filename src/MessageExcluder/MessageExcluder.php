@@ -2,6 +2,8 @@
 
 namespace webignition\HtmlValidator\Output\MessageExcluder;
 
+use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
+
 class MessageExcluder
 {
     const AMPERSAND_ENCODING_MESSAGE =
@@ -19,29 +21,24 @@ class MessageExcluder
      */
     private $ignoreCssValidationIssues = false;
 
-    /**
-     * @param bool $ignoreAmpersandEncodingIssues
-     */
-    public function setIgnoreAmpersandEncodingIssues($ignoreAmpersandEncodingIssues)
+
+    public function setIgnoreAmpersandEncodingIssues(bool $ignoreAmpersandEncodingIssues)
     {
         $this->ignoreAmpersandEncodingIssues = $ignoreAmpersandEncodingIssues;
     }
 
-    /**
-     * @param bool $ignoreCssValidationIssues
-     */
-    public function setIgnoreCSSValidationIssues($ignoreCssValidationIssues)
+    public function setIgnoreCSSValidationIssues(bool $ignoreCssValidationIssues)
     {
         $this->ignoreCssValidationIssues = $ignoreCssValidationIssues;
     }
 
-    public function isMessageExcluded(\stdClass $message)
+    public function isExcluded(ValidationErrorMessage $message): bool
     {
-        if ($this->ignoreAmpersandEncodingIssues && self::AMPERSAND_ENCODING_MESSAGE === $message->message) {
+        if ($this->ignoreAmpersandEncodingIssues && self::AMPERSAND_ENCODING_MESSAGE === $message->getMessage()) {
             return true;
         }
 
-        if ($this->ignoreCssValidationIssues && preg_match(self::CSS_ERROR_MESSAGE_PATTERN, $message->message)) {
+        if ($this->ignoreCssValidationIssues && preg_match(self::CSS_ERROR_MESSAGE_PATTERN, $message->getMessage())) {
             return true;
         }
 

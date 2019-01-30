@@ -1,9 +1,12 @@
 <?php
+/** @noinspection PhpDocSignatureInspection */
 
 namespace webignition\Tests\HtmlValidator\Body;
 
 use webignition\HtmlValidator\Output\Body\TextHtmlParser;
+use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
+use webignition\ValidatorMessage\MessageList;
 
 class TextHtmlParserTest extends \PHPUnit\Framework\TestCase
 {
@@ -24,16 +27,14 @@ class TextHtmlParserTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider parseDataProvider
-     *
-     * @param $fixtureName
-     * @param \stdClass $expectedParserOutput
      */
-    public function testParse($fixtureName, \stdClass $expectedParserOutput)
+    public function testParse($fixtureName, MessageList $expectedMessages)
     {
         $fixture = FixtureLoader::loadBodyContent($fixtureName);
 
-        $parserOutput = $this->parser->parse($fixture);
-        $this->assertEquals($expectedParserOutput, $parserOutput);
+        $messages = $this->parser->parse($fixture);
+
+        $this->assertEquals(array_values($expectedMessages->getMessages()), array_values($messages->getMessages()));
     }
 
     public function parseDataProvider(): array
@@ -41,76 +42,51 @@ class TextHtmlParserTest extends \PHPUnit\Framework\TestCase
         return [
             'validator internal connection timeout' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
-                'expectedParserOutput' => (object)[
-                    'messages' => [
-                        (object)[
-                            'message' => FixtureLoader::load(
-                                'ExpectedMessage/validator-internal-connection-timeout.txt'
-                            ),
-                            'type' => 'error',
-                        ],
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        FixtureLoader::load('ExpectedMessage/validator-internal-connection-timeout.txt'),
+                        'validator-error'
+                    ),
+                ]),
             ],
             'validator internal software error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-software-error.txt',
-                'expectedParserOutput' => (object)[
-                    'messages' => [
-                        (object)[
-                            'message' => 'Sorry, this document can\'t be checked',
-                            'type' => 'error',
-                            'messageId' => 'validator-internal-server-error',
-                        ],
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        'Sorry, this document can\'t be checked',
+                        'validator-internal-server-error'
+                    ),
+                ]),
             ],
             'validator invalid character encoding' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-character-encoding.txt',
-                'expectedParserOutput' => (object)[
-                    'messages' => [
-                        (object)[
-                            'message' => FixtureLoader::load(
-                                'ExpectedMessage/validator-invalid-character-encoding.txt'
-                            ),
-                            'type' => 'error',
-                            'messageId' => 'character-encoding',
-                        ],
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        FixtureLoader::load('ExpectedMessage/validator-invalid-character-encoding.txt'),
+                        'character-encoding'
+                    ),
+                ]),
             ],
             'validator invalid content type' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-content-type.txt',
-                'expectedParserOutput' => (object)[
-                    'messages' => [
-                        (object)[
-                            'message' => FixtureLoader::load('ExpectedMessage/validator-invalid-content-type.txt'),
-                            'type' => 'error',
-                        ],
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        FixtureLoader::load('ExpectedMessage/validator-invalid-content-type.txt'),
+                        'validator-error'
+                    ),
+                ]),
             ],
             'validator unknown error; empty html document' => [
                 'fixtureName' => 'ValidatorOutput/validator-unknown-error.txt',
-                'expectedParserOutput' => (object)[
-                    'messages' => [
-                        (object)[
-                            'message' => 'An unknown error occurred',
-                            'type' => 'error',
-                            'messageId' => 'unknown',
-                        ],
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage('An unknown error occurred', 'unknown'),
+                ]),
             ],
             'validator unknown error; empty fatal errors' => [
                 'fixtureName' => 'ValidatorOutput/validator-empty-fatal-errors.txt',
-                'expectedParserOutput' => (object)[
-                    'messages' => [
-                        (object)[
-                            'message' => '',
-                            'type' => 'error',
-                        ],
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage('', 'validator-error'),
+                ]),
             ],
         ];
     }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1189fc246b7ae481fa07a75f83438f81",
+    "content-hash": "6fa77cb42d4a22dc866429d88df48987",
     "packages": [
         {
             "name": "webignition/disallowed-character-terminated-string",
@@ -46,6 +46,49 @@
                 "terminated"
             ],
             "time": "2012-07-16T21:29:50+00:00"
+        },
+        {
+            "name": "webignition/html-validator-output-models",
+            "version": "0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/html-validator-output-models.git",
+                "reference": "f83a477995fa5ec5de9c3cb0d284c6f248405bbf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/html-validator-output-models/zipball/f83a477995fa5ec5de9c3cb0d284c6f248405bbf",
+                "reference": "f83a477995fa5ec5de9c3cb0d284c6f248405bbf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "webignition/validator-message": ">=0.3,<1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.11.1",
+                "phpunit/phpunit": "~7.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\HtmlValidatorOutput\\Models\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Models for the output from the W3C HTML validator",
+            "homepage": "https://github.com/webignition/html-validator-output-models",
+            "keywords": [
+                "html",
+                "models",
+                "output",
+                "validator"
+            ],
+            "time": "2019-01-30T15:06:04+00:00"
         },
         {
             "name": "webignition/internet-media-type",
@@ -235,6 +278,48 @@
                 "string"
             ],
             "time": "2017-05-11T10:04:12+00:00"
+        },
+        {
+            "name": "webignition/validator-message",
+            "version": "0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/validator-message.git",
+                "reference": "16896f1f1b055256d23423b8f4f8c1ff3dda4822"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/validator-message/zipball/16896f1f1b055256d23423b8f4f8c1ff3dda4822",
+                "reference": "16896f1f1b055256d23423b8f4f8c1ff3dda4822",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.11.1",
+                "phpunit/phpunit": "^7",
+                "squizlabs/php_codesniffer": "^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\ValidatorMessage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "Generic validation output message",
+            "homepage": "https://github.com/webignition/validator-message",
+            "time": "2019-01-29T13:19:14+00:00"
         }
     ],
     "packages-dev": [

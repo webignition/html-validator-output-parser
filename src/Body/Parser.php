@@ -3,7 +3,9 @@
 namespace webignition\HtmlValidator\Output\Body;
 
 use webignition\HtmlValidator\Output\Parser\Configuration;
-use webignition\HtmlValidator\Output\Header\Header;
+use webignition\HtmlValidator\Output\Parser\HeaderValues;
+use webignition\HtmlValidator\Output\Parser\InvalidContentTypeException;
+use webignition\ValidatorMessage\MessageList;
 
 class Parser
 {
@@ -20,29 +22,31 @@ class Parser
         $this->configuration = $configuration;
     }
 
-    public function parse(Header $header, string $htmlValidatorBodyContent): Body
+    /**
+     * @param HeaderValues $headerValues
+     * @param string $content
+     *
+     * @return MessageList
+     *
+     * @throws InvalidContentTypeException
+     */
+    public function parse(HeaderValues $headerValues, string $content): MessageList
     {
-        $body = new Body();
+        $contentType = $headerValues->getContentType();
+        $contentTypeString = $contentType->getTypeSubtypeString();
 
-        switch ($header->get('content-type')->getTypeSubtypeString()) {
-            case 'application/json':
-                $applicationJsonParser = new ApplicationJsonParser($this->configuration);
+        if ('application/json' === $contentTypeString) {
+            $applicationJsonParser = new ApplicationJsonParser($this->configuration);
 
-                $body->setContent($applicationJsonParser->parse($htmlValidatorBodyContent));
-                break;
-
-            case 'text/html':
-                $textHtmlParser = new TextHtmlParser();
-                $body->setContent($textHtmlParser->parse($htmlValidatorBodyContent));
-                break;
-
-            default:
-                throw new \InvalidArgumentException(
-                    'Invalid content type: ' . $header->get('content-type')->getTypeSubtypeString(),
-                    1
-                );
+            return $applicationJsonParser->parse($content);
         }
 
-        return $body;
+        if ('text/html' === $contentTypeString) {
+            $textHtmlParser = new TextHtmlParser();
+
+            return $textHtmlParser->parse($content);
+        }
+
+        throw new InvalidContentTypeException($contentTypeString);
     }
 }

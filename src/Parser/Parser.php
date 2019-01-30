@@ -2,9 +2,12 @@
 
 namespace webignition\HtmlValidator\Output\Parser;
 
-use webignition\HtmlValidator\Output\Header\Parser as HeaderParser;
 use webignition\HtmlValidator\Output\Body\Parser as BodyParser;
-use webignition\HtmlValidator\Output\Output;
+use webignition\HtmlValidatorOutput\Models\Output;
+use webignition\InternetMediaType\Parameter\Parser\AttributeParserException;
+use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
+use webignition\InternetMediaType\Parser\SubtypeParserException;
+use webignition\InternetMediaType\Parser\TypeParserException;
 
 class Parser
 {
@@ -27,18 +30,64 @@ class Parser
     {
         $headerBodyParts = HeaderBodySeparator::separate($htmlValidatorOutput);
 
-        $headerParser = new HeaderParser();
-        $header = $headerParser->parse($headerBodyParts[HeaderBodySeparator::PART_HEADER]);
+        $headerValues = $this->parseHeaderValues($headerBodyParts['header']);
 
         $bodyParser = new BodyParser($this->configuration);
-        $body = $bodyParser->parse($header, $headerBodyParts[HeaderBodySeparator::PART_BODY]);
+        $messages = $bodyParser->parse($headerValues, $headerBodyParts[HeaderBodySeparator::PART_BODY]);
 
-        if (empty($body->getMessages()) && Output::STATUS_INVALID === $header->get('status')) {
-            $header->set('status', Output::STATUS_VALID);
+        $output = new Output($messages);
+
+        if ($headerValues->getWasAborted()) {
+            $output->setWasAborted(true);
         }
 
-        $output = new Output($header, $body);
-
         return $output;
+    }
+
+    /**
+     * @param string $header
+     *
+     * @return HeaderValues
+     *
+     * @throws InvalidContentTypeException
+     */
+    public function parseHeaderValues(string $header): HeaderValues
+    {
+        $headerLines = explode("\n", $header);
+
+        $contentType = null;
+        $wasAborted = true;
+
+        foreach ($headerLines as $headerLine) {
+            $keyValueParts = explode(':', $headerLine, 2);
+            $key = strtolower($keyValueParts[0]);
+            $value = $keyValueParts[1];
+
+            if ('content-type' === $key) {
+                $contentTypeString = trim($value);
+                $contentTypeParser = new ContentTypeParser();
+
+                try {
+                    $contentType = $contentTypeParser->parse($contentTypeString);
+                } catch (AttributeParserException $e) {
+                } catch (SubtypeParserException $e) {
+                } catch (TypeParserException $e) {
+                }
+
+                if (null === $contentType) {
+                    throw new InvalidContentTypeException($contentTypeString);
+                }
+            }
+
+            if ('x-w3c-validator-status' === $key) {
+                $status = strtolower(trim($value));
+
+                if ('valid' === $status || 'invalid' === $status) {
+                    $wasAborted = false;
+                }
+            }
+        }
+
+        return new HeaderValues($wasAborted, $contentType);
     }
 }

@@ -2,85 +2,69 @@
 
 namespace webignition\HtmlValidator\Output\Body;
 
+use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
+use webignition\ValidatorMessage\MessageList;
+
 class TextHtmlParser
 {
     const SOFTWARE_ERROR_HEADING_CONTENT = 'Software error:';
 
-    /**
-     * @var string
-     */
-    private $htmlValidatorBodyContent = null;
-
-    /**
-     * @var \DOMDocument
-     */
-    private $dom = null;
-
-    /**
-     * @param string $htmlValidatorBodyContent
-     *
-     * @return null|\stdClass
-     */
-    public function parse(string $htmlValidatorBodyContent)
+    public function parse(string $htmlValidatorBodyContent): MessageList
     {
-        $this->htmlValidatorBodyContent = $htmlValidatorBodyContent;
+        $dom = new \DOMDocument();
+        $dom->loadHTML($htmlValidatorBodyContent);
 
-        if ($this->isValidatorSoftwareError()) {
-            return $this->getValidatorInternalErrorOutputObject();
+        if ($this->isValidatorSoftwareError($dom)) {
+            return new MessageList([
+                new ValidatorErrorMessage(
+                    'Sorry, this document can\'t be checked',
+                    'validator-internal-server-error'
+                ),
+            ]);
         }
 
-        if ($this->isCharacterEncodingError()) {
-            return $this->getCharacterEncodingErrorOutputObject();
+        $fatalErrorsElement = $dom->getElementById('fatal-errors');
+        $hasFatalErrors = $fatalErrorsElement instanceof \DOMElement;
+
+        if ($hasFatalErrors) {
+            $fatalErrorMessageList = $this->createFatalErrorMessageList($fatalErrorsElement);
+            $messages = $fatalErrorMessageList->getMessages();
+            $firstMessage = current($messages);
+
+            $isCharacterEncodingError = substr_count(
+                $firstMessage->getMessage(),
+                'contained one or more bytes that I cannot interpret'
+            ) === 1;
+
+            if ($isCharacterEncodingError) {
+                return new MessageList([
+                    $firstMessage->withMessageId('character-encoding'),
+                ]);
+            }
+
+            return $fatalErrorMessageList;
         }
 
-        if ($this->hasFatalErrorsCollection()) {
-            return $this->getFatalErrorCollectionOutputObject();
-        }
-
-        return $this->getValidatorUnknownErrorOutputObject();
+        return new MessageList([
+            $this->createValidatorUnknownErrorMessage(),
+        ]);
     }
 
-    private function getDom(): \DOMDocument
+    private function isValidatorSoftwareError(\DOMDocument $dom): bool
     {
-        if (is_null($this->dom)) {
-            $this->dom = new \DOMDocument();
-            $this->dom->loadHTML($this->htmlValidatorBodyContent);
-        }
-
-        return $this->dom;
-    }
-
-    private function hasFatalErrorsCollection(): bool
-    {
-        return !is_null($this->getFatalErrorsCollection());
-    }
-
-    /**
-     * @return \DOMElement|null
-     */
-    private function getFatalErrorsCollection()
-    {
-        return $this->getDom()->getElementById('fatal-errors');
-    }
-
-    private function isValidatorSoftwareError(): bool
-    {
-        $levelOneHeading = $this->getLevelOneHeading();
+        $levelOneHeading = $this->getLevelOneHeading($dom);
 
         if (empty($levelOneHeading)) {
             return false;
         }
 
-        return $this->getLevelOneHeading()->textContent === self::SOFTWARE_ERROR_HEADING_CONTENT;
+        return $levelOneHeading->textContent === self::SOFTWARE_ERROR_HEADING_CONTENT;
     }
 
-    /**
-     * @return \DOMElement|null
-     */
-    private function getLevelOneHeading()
+    private function getLevelOneHeading(\DOMDocument $dom): ?\DOMElement
     {
         /* @var \DOMNodeList */
-        $levelOneHeadings = $this->getDom()->getElementsByTagName('h1');
+        $levelOneHeadings = $dom->getElementsByTagName('h1');
 
         if (0 === $levelOneHeadings->length) {
             return null;
@@ -89,71 +73,16 @@ class TextHtmlParser
         return $levelOneHeadings->item(0);
     }
 
-    private function isCharacterEncodingError(): bool
+    private function createValidatorUnknownErrorMessage(): ValidatorErrorMessage
     {
-        if (!$this->hasFatalErrorsCollection()) {
-            return false;
-        }
-
-        $fatalErrorCollectionOutputObject = $this->getFatalErrorCollectionOutputObject();
-
-        $messages = $fatalErrorCollectionOutputObject->messages;
-
-        $message = $messages[0];
-
-        return substr_count($message->message, 'contained one or more bytes that I cannot interpret') === 1;
+        return new ValidatorErrorMessage('An unknown error occurred', 'unknown');
     }
 
-    private function getValidatorInternalErrorOutputObject(): \stdClass
+    private function createFatalErrorMessageList(\DOMElement $fatalErrorsElement): MessageList
     {
-        $outputObject = new \stdClass();
-        $outputObject->messages = array();
+        $messages = [];
 
-        $currentError = new \stdClass();
-        $currentError->message = 'Sorry, this document can\'t be checked';
-        $currentError->type = 'error';
-        $currentError->messageId = 'validator-internal-server-error';
-
-        $outputObject->messages[] = $currentError;
-        return $outputObject;
-    }
-
-    private function getCharacterEncodingErrorOutputObject(): \stdClass
-    {
-        $fatalErrorCollectionOutputObject = $this->getFatalErrorCollectionOutputObject();
-        $message = $fatalErrorCollectionOutputObject->messages[0]->message;
-
-        $outputObject = new \stdClass();
-        $outputObject->messages = array();
-
-        $currentError = new \stdClass();
-        $currentError->message = $message;
-        $currentError->type = 'error';
-        $currentError->messageId = 'character-encoding';
-
-        $outputObject->messages[] = $currentError;
-
-        return $outputObject;
-    }
-
-    private function getValidatorUnknownErrorOutputObject(): \stdClass
-    {
-        $outputObject = new \stdClass();
-        $outputObject->messages = array();
-
-        $currentError = new \stdClass();
-        $currentError->message = 'An unknown error occurred';
-        $currentError->type = 'error';
-        $currentError->messageId = 'unknown';
-
-        $outputObject->messages[] = $currentError;
-
-        return $outputObject;
-    }
-
-    private function getFatalErrorCollectionOutputObject(): \stdClass
-    {
-        $errorContainers = $this->getFatalErrorsCollection()->getElementsByTagName('li');
+        $errorContainers = $fatalErrorsElement->getElementsByTagName('li');
 
         $outputObject = new \stdClass();
         $outputObject->messages = [];
@@ -174,8 +103,10 @@ class TextHtmlParser
             $currentError->type = 'error';
 
             $outputObject->messages[] = $currentError;
+
+            $messages[] = new ValidatorErrorMessage($currentErrorContent, 'validator-error');
         }
 
-        return $outputObject;
+        return new MessageList($messages);
     }
 }
