@@ -1,7 +1,7 @@
 <?php
 /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Parser;
+namespace webignition\Tests\HtmlValidator\Output\Parser;
 
 use webignition\HtmlValidator\Output\Parser\MessageFactory;
 use webignition\HtmlValidatorOutput\Models\AbstractIssueMessage;
