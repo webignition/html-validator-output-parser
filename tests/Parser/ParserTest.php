@@ -1,17 +1,34 @@
-<?php
+<?php /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Parser;
+namespace webignition\Tests\HtmlValidator\Output\Parser;
 
-use webignition\HtmlValidator\Output\Output;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidator\Output\Parser\Parser;
+use webignition\HtmlValidator\Output\Parser\InvalidContentTypeException;
+use webignition\HtmlValidatorOutput\Models\Output;
+use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
+use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
 use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
+use webignition\ValidatorMessage\MessageList;
 
 class ParserTest extends \PHPUnit\Framework\TestCase
 {
+    public function testParseUnparseableContentType()
+    {
+        $this->expectException(InvalidContentTypeException::class);
+        $this->expectExceptionMessage('Invalid content type: t e x t');
+        $this->expectExceptionCode(1);
+
+        $fixture = FixtureLoader::load('ValidatorOutput/unparseable-output-content-type.txt');
+
+        $parser = new Parser();
+        $parser->parse($fixture);
+    }
+
+
     public function testParseInvalidOutputContentType()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidContentTypeException::class);
         $this->expectExceptionMessage('Invalid content type: text/plain');
         $this->expectExceptionCode(1);
 
@@ -23,18 +40,11 @@ class ParserTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider parseDataProvider
-     *
-     * @param string $fixtureName
-     * @param array $configurationValues
-     * @param array $expectedOutputMessages
-     * @param bool $expectedOutputIsValid
-     * @param bool $expectedOutputWasAborted
-     * @param int $expectedErrorCount
      */
-    public function testParse(
+    public function testParseFoo(
         $fixtureName,
         array $configurationValues,
-        array $expectedOutputMessages,
+        MessageList $expectedMessages,
         $expectedOutputIsValid,
         $expectedOutputWasAborted,
         $expectedErrorCount
@@ -45,7 +55,10 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         $output = $parser->parse($fixture);
 
         $this->assertInstanceOf(Output::class, $output);
-        $this->assertEquals($expectedOutputMessages, $output->getMessages());
+        $this->assertEquals(
+            array_values($expectedMessages->getMessages()),
+            array_values($output->getMessages()->getMessages())
+        );
         $this->assertEquals($expectedOutputIsValid, $output->isValid());
         $this->assertEquals($expectedOutputWasAborted, $output->wasAborted());
         $this->assertEquals($expectedErrorCount, $output->getErrorCount());
@@ -57,7 +70,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             'no errors' => [
                 'fixtureName' => 'ValidatorOutput/0-errors.txt',
                 'configurationValues' => [],
-                'expectedMessages' => [],
+                'expectedMessages' => new MessageList(),
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 0,
@@ -65,26 +78,24 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             'two errors' => [
                 'fixtureName' => 'ValidatorOutput/2-errors.txt',
                 'configurationValues' => [],
-                'expectedMessages' => [
-                    (object)[
-                        'lastLine' => 188,
-                        'lastColumn' => 79,
-                        'message' => 'An img element must have an alt attribute, except under certain conditions. '
-                            .'For details, consult guidance on providing text alternatives for images.',
-                        'explanation' => 'image missing alt attribute explanation',
-                        'type' => 'error',
-                        'messageid' => 'html5',
-                    ],
-                    (object)[
-                        'lastLine' => 282,
-                        'lastColumn' => 83,
-                        'message' => '& did not start a character reference. '
-                            .'(& probably should have been escaped as &amp;.)',
-                        'explanation' => 'improper ampersand explanation',
-                        'type' => 'error',
-                        'messageid' => 'html5',
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidationErrorMessage(
+                        'An img element must have an alt attribute, except under certain conditions. '
+                        .'For details, consult guidance on providing text alternatives for images.',
+                        'html5',
+                        'image missing alt attribute explanation',
+                        188,
+                        79
+                    ),
+                    new ValidationErrorMessage(
+                        '& did not start a character reference. '
+                        .'(& probably should have been escaped as &amp;.)',
+                        'html5',
+                        'improper ampersand explanation',
+                        282,
+                        83
+                    ),
+                ]),
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 2,
@@ -94,17 +105,16 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 'configurationValues' => [
                     Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
                 ],
-                'expectedMessages' => [
-                    (object)[
-                        'lastLine' => 188,
-                        'lastColumn' => 79,
-                        'message' => 'An img element must have an alt attribute, except under certain conditions. '
-                            .'For details, consult guidance on providing text alternatives for images.',
-                        'explanation' => 'image missing alt attribute explanation',
-                        'type' => 'error',
-                        'messageid' => 'html5',
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidationErrorMessage(
+                        'An img element must have an alt attribute, except under certain conditions. '
+                        .'For details, consult guidance on providing text alternatives for images.',
+                        'html5',
+                        'image missing alt attribute explanation',
+                        188,
+                        79
+                    ),
+                ]),
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 1,
@@ -112,32 +122,24 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             'two errors, invalid info message json' => [
                 'fixtureName' => 'ValidatorOutput/2-errors-invalid-info-message.txt',
                 'configurationValues' => [],
-                'expectedMessages' => [
-                    (object)[
-                        'message' => '',
-                        'explanation' => 'foo',
-                        'type' => 'info',
-                        'messageid' => 'html5',
-                    ],
-                    (object)[
-                        'lastLine' => 188,
-                        'lastColumn' => 79,
-                        'message' => 'An img element must have an alt attribute, except under certain conditions. '
-                            .'For details, consult guidance on providing text alternatives for images.',
-                        'explanation' => 'image missing alt attribute explanation',
-                        'type' => 'error',
-                        'messageid' => 'html5',
-                    ],
-                    (object)[
-                        'lastLine' => 282,
-                        'lastColumn' => 83,
-                        'message' => '& did not start a character reference. '
-                            .'(& probably should have been escaped as &amp;.)',
-                        'explanation' => 'improper ampersand explanation',
-                        'type' => 'error',
-                        'messageid' => 'html5',
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidationErrorMessage(
+                        'An img element must have an alt attribute, except under certain conditions. '
+                        .'For details, consult guidance on providing text alternatives for images.',
+                        'html5',
+                        'image missing alt attribute explanation',
+                        188,
+                        79
+                    ),
+                    new ValidationErrorMessage(
+                        '& did not start a character reference. '
+                        .'(& probably should have been escaped as &amp;.)',
+                        'html5',
+                        'improper ampersand explanation',
+                        282,
+                        83
+                    ),
+                ]),
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 2,
@@ -145,12 +147,12 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             'validator internal connection timeout error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
                 'configurationValues' => [],
-                'expectedMessages' => [
-                    (object)[
-                        'message' => FixtureLoader::load('ExpectedMessage/validator-internal-connection-timeout.txt'),
-                        'type' => 'error',
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        FixtureLoader::load('ExpectedMessage/validator-internal-connection-timeout.txt'),
+                        'validator-error'
+                    )
+                ]),
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
                 'expectedErrorCount' => 1,
@@ -158,27 +160,25 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             'validator internal software error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-software-error.txt',
                 'configurationValues' => [],
-                'expectedMessages' => [
-                    (object)[
-                        'message' => 'Sorry, this document can\'t be checked',
-                        'type' => 'error',
-                        'messageId' => 'validator-internal-server-error',
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        'Sorry, this document can\'t be checked',
+                        'validator-internal-server-error'
+                    )
+                ]),
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
-                'expectedErrorCount' => null,
+                'expectedErrorCount' => 1,
             ],
             'validator invalid character encoding error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-character-encoding.txt',
                 'configurationValues' => [],
-                'expectedMessages' => [
-                    (object)[
-                        'message' => FixtureLoader::load('ExpectedMessage/validator-invalid-character-encoding.txt'),
-                        'type' => 'error',
-                        'messageId' => 'character-encoding',
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        FixtureLoader::load('ExpectedMessage/validator-invalid-character-encoding.txt'),
+                        'character-encoding'
+                    )
+                ]),
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
                 'expectedErrorCount' => 1,
@@ -186,12 +186,12 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             'validator invalid content type error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-content-type.txt',
                 'configurationValues' => [],
-                'expectedMessages' => [
-                    (object)[
-                        'message' => FixtureLoader::load('ExpectedMessage/validator-invalid-content-type.txt'),
-                        'type' => 'error',
-                    ],
-                ],
+                'expectedMessages' => new MessageList([
+                    new ValidatorErrorMessage(
+                        FixtureLoader::load('ExpectedMessage/validator-invalid-content-type.txt'),
+                        'validator-error'
+                    )
+                ]),
                 'expectedOutputIsValid' => false,
                 'expectedOutputWasAborted' => true,
                 'expectedErrorCount' => 1,
@@ -201,7 +201,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 'configurationValues' => [
                     Configuration::KEY_CSS_VALIDATION_ISSUES => true,
                 ],
-                'expectedMessages' => [],
+                'expectedMessages' => new MessageList(),
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 0,
@@ -211,7 +211,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 'configurationValues' => [
                     Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
                 ],
-                'expectedMessages' => [],
+                'expectedMessages' => new MessageList(),
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 0,
@@ -221,22 +221,26 @@ class ParserTest extends \PHPUnit\Framework\TestCase
 
     public function testConfigure()
     {
+        $messageList = new MessageList([
+            new ValidationErrorMessage(
+                '& did not start a character reference. (& probably should have been escaped as &amp;.)',
+                'html5',
+                'improper ampersand explanation',
+                282,
+                83
+            ),
+        ]);
+
         $fixture = FixtureLoader::load('ValidatorOutput/ampersand-encoding-issues-only.txt');
 
         $parser = new Parser();
         $output = $parser->parse($fixture);
 
-        $this->assertEquals([
-            (object)[
-                'lastLine' => 282,
-                'lastColumn' => 83,
-                'message' => '& did not start a character reference. '
-                    .'(& probably should have been escaped as &amp;.)',
-                'explanation' => 'improper ampersand explanation',
-                'type' => 'error',
-                'messageid' => 'html5',
-            ],
-        ], $output->getMessages());
+        $this->assertEquals(
+            array_values($messageList->getMessages()),
+            array_values($output->getMessages()->getMessages())
+        );
+
         $this->assertEquals(false, $output->isValid());
         $this->assertEquals(1, $output->getErrorCount());
 
@@ -245,7 +249,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $output = $parser->parse($fixture);
-        $this->assertEquals([], $output->getMessages());
+        $this->assertEquals(new MessageList(), $output->getMessages());
         $this->assertEquals(true, $output->isValid());
         $this->assertEquals(0, $output->getErrorCount());
     }

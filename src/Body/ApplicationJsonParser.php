@@ -6,6 +6,7 @@ use webignition\HtmlValidator\Output\MessageExcluder\Factory;
 use webignition\HtmlValidator\Output\MessageExcluder\MessageExcluder;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidator\Output\Parser\MessageFactory;
+use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
 use webignition\ValidatorMessage\MessageList;
 
 class ApplicationJsonParser
@@ -47,7 +48,7 @@ class ApplicationJsonParser
             if (is_array($messageValues)) {
                 $message = $this->messageFactory->createMessageFromArray($messageValues);
 
-                if (!$this->messageExcluder->isMessageExcluded($message)) {
+                if ($message instanceof ValidationErrorMessage && !$this->messageExcluder->isExcluded($message)) {
                     $messageList->addMessage($message);
                 }
             }
