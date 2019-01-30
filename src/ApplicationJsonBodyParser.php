@@ -1,15 +1,11 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\Body;
+namespace webignition\HtmlValidatorOutput\Parser;
 
-use webignition\HtmlValidator\Output\MessageExcluder\Factory;
-use webignition\HtmlValidator\Output\MessageExcluder\MessageExcluder;
-use webignition\HtmlValidator\Output\Parser\Configuration;
-use webignition\HtmlValidator\Output\Parser\MessageFactory;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
 use webignition\ValidatorMessage\MessageList;
 
-class ApplicationJsonParser
+class ApplicationJsonBodyParser
 {
     const KEY_MESSAGES = 'messages';
 
@@ -28,7 +24,7 @@ class ApplicationJsonParser
 
     public function __construct(Configuration $configuration)
     {
-        $this->messageExcluder = Factory::create($configuration);
+        $this->messageExcluder = MessageExcluderFactory::create($configuration);
         $this->messageFactory = new MessageFactory();
     }
 

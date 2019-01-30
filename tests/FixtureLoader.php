@@ -1,14 +1,14 @@
 <?php
 
-namespace webignition\Tests\HtmlValidator\Helper;
+namespace webignition\HtmlValidatorOutput\Parser\Tests;
 
-use webignition\HtmlValidator\Output\Parser\HeaderBodySeparator;
+use webignition\HtmlValidatorOutput\Parser\HeaderBodySeparator;
 
 class FixtureLoader
 {
     public static function load(string $name): string
     {
-        $path = realpath(__DIR__ . '/../fixtures/' . $name);
+        $path = realpath(__DIR__ . '/fixtures/' . $name);
 
         if (false === $path) {
             return '';

@@ -1,6 +1,6 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\Parser;
+namespace webignition\HtmlValidatorOutput\Parser;
 
 use webignition\HtmlValidatorOutput\Models\InfoMessage;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;

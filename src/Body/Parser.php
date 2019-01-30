@@ -39,7 +39,7 @@ class Parser
             $contentTypeString = $contentType->getTypeSubtypeString();
 
             if ('application/json' === $contentTypeString) {
-                $applicationJsonParser = new ApplicationJsonParser($this->configuration);
+                $applicationJsonParser = new ApplicationJsonBodyParser($this->configuration);
 
                 return $applicationJsonParser->parse($content);
             }
