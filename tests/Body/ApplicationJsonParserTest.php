@@ -1,7 +1,7 @@
 <?php
 /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Body;
+namespace webignition\Tests\HtmlValidator\Output\Body;
 
 use webignition\HtmlValidator\Output\Body\ApplicationJsonParser;
 use webignition\HtmlValidator\Output\Parser\Configuration;

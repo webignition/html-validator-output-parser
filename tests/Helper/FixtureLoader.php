@@ -6,22 +6,22 @@ use webignition\HtmlValidator\Output\Parser\HeaderBodySeparator;
 
 class FixtureLoader
 {
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public static function load($name)
+    public static function load(string $name): string
     {
-        return file_get_contents(realpath(__DIR__ . '/../fixtures/' . $name));
+        $path = realpath(__DIR__ . '/../fixtures/' . $name);
+
+        if (false === $path) {
+            return '';
+        }
+
+        $content = file_get_contents($path);
+
+        return false === $content
+            ? ''
+            : $content;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public static function loadBodyContent($name)
+    public static function loadBodyContent(string $name): string
     {
         $fixture = self::load($name);
 

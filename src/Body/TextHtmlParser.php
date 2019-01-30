@@ -24,9 +24,8 @@ class TextHtmlParser
         }
 
         $fatalErrorsElement = $dom->getElementById('fatal-errors');
-        $hasFatalErrors = $fatalErrorsElement instanceof \DOMElement;
 
-        if ($hasFatalErrors) {
+        if ($fatalErrorsElement instanceof \DOMElement) {
             $fatalErrorMessageList = $this->createFatalErrorMessageList($fatalErrorsElement);
             $messages = $fatalErrorMessageList->getMessages();
             $firstMessage = current($messages);
@@ -52,25 +51,20 @@ class TextHtmlParser
 
     private function isValidatorSoftwareError(\DOMDocument $dom): bool
     {
-        $levelOneHeading = $this->getLevelOneHeading($dom);
+        /* @var \DOMNodeList */
+        $levelOneHeadings = $dom->getElementsByTagName('h1');
+
+        if (0 === $levelOneHeadings->length) {
+            return false;
+        }
+
+        $levelOneHeading = $levelOneHeadings->item(0);
 
         if (empty($levelOneHeading)) {
             return false;
         }
 
         return $levelOneHeading->textContent === self::SOFTWARE_ERROR_HEADING_CONTENT;
-    }
-
-    private function getLevelOneHeading(\DOMDocument $dom): ?\DOMElement
-    {
-        /* @var \DOMNodeList */
-        $levelOneHeadings = $dom->getElementsByTagName('h1');
-
-        if (0 === $levelOneHeadings->length) {
-            return null;
-        }
-
-        return $levelOneHeadings->item(0);
     }
 
     private function createValidatorUnknownErrorMessage(): ValidatorErrorMessage
