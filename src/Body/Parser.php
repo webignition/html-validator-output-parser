@@ -5,6 +5,7 @@ namespace webignition\HtmlValidator\Output\Body;
 use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidator\Output\Parser\HeaderValues;
 use webignition\HtmlValidator\Output\Parser\InvalidContentTypeException;
+use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\ValidatorMessage\MessageList;
 
 class Parser
@@ -33,20 +34,25 @@ class Parser
     public function parse(HeaderValues $headerValues, string $content): MessageList
     {
         $contentType = $headerValues->getContentType();
-        $contentTypeString = $contentType->getTypeSubtypeString();
 
-        if ('application/json' === $contentTypeString) {
-            $applicationJsonParser = new ApplicationJsonParser($this->configuration);
+        if ($contentType instanceof InternetMediaTypeInterface) {
+            $contentTypeString = $contentType->getTypeSubtypeString();
 
-            return $applicationJsonParser->parse($content);
+            if ('application/json' === $contentTypeString) {
+                $applicationJsonParser = new ApplicationJsonParser($this->configuration);
+
+                return $applicationJsonParser->parse($content);
+            }
+
+            if ('text/html' === $contentTypeString) {
+                $textHtmlParser = new TextHtmlParser();
+
+                return $textHtmlParser->parse($content);
+            }
+
+            throw new InvalidContentTypeException($contentTypeString);
         }
 
-        if ('text/html' === $contentTypeString) {
-            $textHtmlParser = new TextHtmlParser();
-
-            return $textHtmlParser->parse($content);
-        }
-
-        throw new InvalidContentTypeException($contentTypeString);
+        throw new InvalidContentTypeException('');
     }
 }

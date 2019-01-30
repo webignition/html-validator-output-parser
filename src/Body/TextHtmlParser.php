@@ -24,9 +24,8 @@ class TextHtmlParser
         }
 
         $fatalErrorsElement = $dom->getElementById('fatal-errors');
-        $hasFatalErrors = $fatalErrorsElement instanceof \DOMElement;
 
-        if ($hasFatalErrors) {
+        if ($fatalErrorsElement instanceof \DOMElement) {
             $fatalErrorMessageList = $this->createFatalErrorMessageList($fatalErrorsElement);
             $messages = $fatalErrorMessageList->getMessages();
             $firstMessage = current($messages);
