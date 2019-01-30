@@ -7,13 +7,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "webignition\\HtmlValidator\\Output\\": "src/"
+            "webignition\\HtmlValidatorOutput\\Parser\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "webignition\\Tests\\HtmlValidator\\Output\\": "tests/",
-            "webignition\\Tests\\HtmlValidator\\Helper\\": "tests/Helper"
+            "webignition\\HtmlValidatorOutput\\Parser\\Tests\\": "tests/"
         }
     },
     "scripts": {

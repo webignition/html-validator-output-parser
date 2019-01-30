@@ -1,8 +1,8 @@
 <?php
 
-namespace webignition\Tests\HtmlValidator\Output\Parser;
+namespace webignition\HtmlValidatorOutput\Parser\Tests;
 
-use webignition\HtmlValidator\Output\Parser\Configuration;
+use webignition\HtmlValidatorOutput\Parser\Configuration;
 
 class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {

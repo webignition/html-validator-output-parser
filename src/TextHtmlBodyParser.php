@@ -1,11 +1,11 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\Body;
+namespace webignition\HtmlValidatorOutput\Parser;
 
 use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
 use webignition\ValidatorMessage\MessageList;
 
-class TextHtmlParser
+class TextHtmlBodyParser
 {
     const SOFTWARE_ERROR_HEADING_CONTENT = 'Software error:';
 

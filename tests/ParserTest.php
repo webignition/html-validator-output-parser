@@ -1,14 +1,13 @@
 <?php /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Output\Parser;
+namespace webignition\HtmlValidatorOutput\Parser\Tests;
 
-use webignition\HtmlValidator\Output\Parser\Configuration;
-use webignition\HtmlValidator\Output\Parser\Parser;
-use webignition\HtmlValidator\Output\Parser\InvalidContentTypeException;
 use webignition\HtmlValidatorOutput\Models\Output;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
 use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
-use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
+use webignition\HtmlValidatorOutput\Parser\Configuration;
+use webignition\HtmlValidatorOutput\Parser\InvalidContentTypeException;
+use webignition\HtmlValidatorOutput\Parser\Parser;
 use webignition\ValidatorMessage\MessageList;
 
 class ParserTest extends \PHPUnit\Framework\TestCase

@@ -1,8 +1,7 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\Parser;
+namespace webignition\HtmlValidatorOutput\Parser;
 
-use webignition\HtmlValidator\Output\Body\Parser as BodyParser;
 use webignition\HtmlValidatorOutput\Models\Output;
 use webignition\InternetMediaType\Parameter\Parser\AttributeParserException;
 use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;

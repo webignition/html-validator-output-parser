@@ -1,10 +1,8 @@
 <?php
 
-namespace webignition\HtmlValidator\Output\MessageExcluder;
+namespace webignition\HtmlValidatorOutput\Parser;
 
-use webignition\HtmlValidator\Output\Parser\Configuration;
-
-class Factory
+class MessageExcluderFactory
 {
     public static function create($configuration = null)
     {

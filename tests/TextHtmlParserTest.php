@@ -1,17 +1,16 @@
 <?php
 /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Output\Body;
+namespace webignition\HtmlValidatorOutput\Parser\Tests;
 
-use webignition\HtmlValidator\Output\Body\TextHtmlParser;
 use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
-use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
+use webignition\HtmlValidatorOutput\Parser\TextHtmlBodyParser;
 use webignition\ValidatorMessage\MessageList;
 
 class TextHtmlParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var TextHtmlParser
+     * @var TextHtmlBodyParser
      */
     private $parser;
 
@@ -22,7 +21,7 @@ class TextHtmlParserTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->parser = new TextHtmlParser();
+        $this->parser = new TextHtmlBodyParser();
     }
 
     /**

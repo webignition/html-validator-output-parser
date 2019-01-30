@@ -1,12 +1,11 @@
 <?php
 /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Output\Body;
+namespace webignition\HtmlValidatorOutput\Parser\Tests;
 
-use webignition\HtmlValidator\Output\Body\ApplicationJsonParser;
-use webignition\HtmlValidator\Output\Parser\Configuration;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
-use webignition\Tests\HtmlValidator\Helper\FixtureLoader;
+use webignition\HtmlValidatorOutput\Parser\ApplicationJsonBodyParser;
+use webignition\HtmlValidatorOutput\Parser\Configuration;
 use webignition\ValidatorMessage\MessageList;
 
 class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
@@ -16,7 +15,7 @@ class ApplicationJsonParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testParse($fixtureName, Configuration $configuration, MessageList $expectedMessages)
     {
-        $parser = new ApplicationJsonParser($configuration);
+        $parser = new ApplicationJsonBodyParser($configuration);
         $fixture = FixtureLoader::loadBodyContent($fixtureName);
 
         $messages = $parser->parse($fixture);

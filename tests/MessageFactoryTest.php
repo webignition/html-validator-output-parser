@@ -1,12 +1,12 @@
 <?php
 /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Output\Parser;
+namespace webignition\HtmlValidatorOutput\Parser\Tests;
 
-use webignition\HtmlValidator\Output\Parser\MessageFactory;
 use webignition\HtmlValidatorOutput\Models\AbstractIssueMessage;
 use webignition\HtmlValidatorOutput\Models\InfoMessage;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
+use webignition\HtmlValidatorOutput\Parser\MessageFactory;
 
 class MessageFactoryTest extends \PHPUnit\Framework\TestCase
 {
