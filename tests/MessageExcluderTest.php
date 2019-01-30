@@ -1,7 +1,7 @@
 <?php
 /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\HtmlValidatorOutput\Parser\Tests\MessageExcluder;
+namespace webignition\HtmlValidatorOutput\Parser\Tests;
 
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
 use webignition\HtmlValidatorOutput\Parser\MessageExcluder;
