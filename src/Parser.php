@@ -3,6 +3,8 @@
 namespace webignition\HtmlValidatorOutput\Parser;
 
 use webignition\HtmlValidatorOutput\Models\Output;
+use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
+use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
 use webignition\InternetMediaType\Parameter\Parser\AttributeParserException;
 use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 use webignition\InternetMediaType\Parser\SubtypeParserException;
@@ -12,6 +14,11 @@ use webignition\ValidatorMessage\MessageList;
 
 class Parser
 {
+    const AMPERSAND_ENCODING_MESSAGE =
+        '& did not start a character reference. (& probably should have been escaped as &amp;.)';
+
+    const CSS_ERROR_MESSAGE_PATTERN = '/^CSS:/';
+
     /**
      * @var Configuration
      */
@@ -33,9 +40,7 @@ class Parser
 
         $headerValues = $this->parseHeaderValues($headerBodyParts['header']);
         $messages = $this->parseBody($headerValues->getContentType(), $headerBodyParts[HeaderBodySeparator::PART_BODY]);
-
-        $messageExcluder = MessageExcluderFactory::create($this->configuration);
-        $messages = $messageExcluder->filter($messages);
+        $messages = $this->filter($messages);
 
         $output = new Output($messages);
 
@@ -119,5 +124,36 @@ class Parser
         }
 
         throw new InvalidContentTypeException($contentTypeString);
+    }
+
+    private function filter(MessageList $messageList)
+    {
+        $ignoreAmpersandEncodingIssues = $this->configuration->getIgnoreAmpersandEncodingIssues();
+        $ignoreCssValidationIssues = $this->configuration->getIgnoreCssValidationIssues();
+
+        return $messageList->filter(function (
+            $message
+        ) use (
+            $ignoreAmpersandEncodingIssues,
+            $ignoreCssValidationIssues
+        ) {
+            if ($message instanceof ValidationErrorMessage) {
+                if ($ignoreAmpersandEncodingIssues && self::AMPERSAND_ENCODING_MESSAGE === $message->getMessage()) {
+                    return false;
+                }
+
+                if ($ignoreCssValidationIssues && preg_match(self::CSS_ERROR_MESSAGE_PATTERN, $message->getMessage())) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if ($message instanceof ValidatorErrorMessage) {
+                return true;
+            }
+
+            return false;
+        });
     }
 }
