@@ -8,6 +8,7 @@ use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 use webignition\InternetMediaType\Parser\SubtypeParserException;
 use webignition\InternetMediaType\Parser\TypeParserException;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
+use webignition\ValidatorMessage\MessageList;
 
 class Parser
 {
@@ -31,9 +32,7 @@ class Parser
         $headerBodyParts = HeaderBodySeparator::separate($htmlValidatorOutput);
 
         $headerValues = $this->parseHeaderValues($headerBodyParts['header']);
-
-        $bodyParser = new BodyParser($this->configuration);
-        $messages = $bodyParser->parse($headerValues, $headerBodyParts[HeaderBodySeparator::PART_BODY]);
+        $messages = $this->parseBody($headerValues->getContentType(), $headerBodyParts[HeaderBodySeparator::PART_BODY]);
 
         $output = new Output($messages);
 
@@ -51,7 +50,7 @@ class Parser
      *
      * @throws InvalidContentTypeException
      */
-    public function parseHeaderValues(string $header): HeaderValues
+    private function parseHeaderValues(string $header): HeaderValues
     {
         $headerLines = explode("\n", $header);
 
@@ -87,6 +86,33 @@ class Parser
 
         if ($contentType instanceof InternetMediaTypeInterface) {
             return new HeaderValues($wasAborted, $contentType);
+        }
+
+        throw new InvalidContentTypeException($contentTypeString);
+    }
+
+    /**
+     * @param InternetMediaTypeInterface $contentType
+     * @param string $body
+     *
+     * @return MessageList
+     *
+     * @throws InvalidContentTypeException
+     */
+    private function parseBody(InternetMediaTypeInterface $contentType, string $body): MessageList
+    {
+        $contentTypeString = $contentType->getTypeSubtypeString();
+
+        if ('application/json' === $contentTypeString) {
+            $applicationJsonParser = new ApplicationJsonBodyParser($this->configuration);
+
+            return $applicationJsonParser->parse($body);
+        }
+
+        if ('text/html' === $contentTypeString) {
+            $textHtmlParser = new TextHtmlBodyParser();
+
+            return $textHtmlParser->parse($body);
         }
 
         throw new InvalidContentTypeException($contentTypeString);
