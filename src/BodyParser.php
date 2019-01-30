@@ -2,7 +2,6 @@
 
 namespace webignition\HtmlValidatorOutput\Parser;
 
-use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\ValidatorMessage\MessageList;
 
 class BodyParser
@@ -31,25 +30,20 @@ class BodyParser
     public function parse(HeaderValues $headerValues, string $content): MessageList
     {
         $contentType = $headerValues->getContentType();
+        $contentTypeString = $contentType->getTypeSubtypeString();
 
-        if ($contentType instanceof InternetMediaTypeInterface) {
-            $contentTypeString = $contentType->getTypeSubtypeString();
+        if ('application/json' === $contentTypeString) {
+            $applicationJsonParser = new ApplicationJsonBodyParser($this->configuration);
 
-            if ('application/json' === $contentTypeString) {
-                $applicationJsonParser = new ApplicationJsonBodyParser($this->configuration);
-
-                return $applicationJsonParser->parse($content);
-            }
-
-            if ('text/html' === $contentTypeString) {
-                $textHtmlParser = new TextHtmlBodyParser();
-
-                return $textHtmlParser->parse($content);
-            }
-
-            throw new InvalidContentTypeException($contentTypeString);
+            return $applicationJsonParser->parse($content);
         }
 
-        throw new InvalidContentTypeException('');
+        if ('text/html' === $contentTypeString) {
+            $textHtmlParser = new TextHtmlBodyParser();
+
+            return $textHtmlParser->parse($content);
+        }
+
+        throw new InvalidContentTypeException($contentTypeString);
     }
 }

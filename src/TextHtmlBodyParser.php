@@ -53,18 +53,11 @@ class TextHtmlBodyParser
     {
         /* @var \DOMNodeList */
         $levelOneHeadings = $dom->getElementsByTagName('h1');
-
-        if (0 === $levelOneHeadings->length) {
-            return false;
-        }
-
         $levelOneHeading = $levelOneHeadings->item(0);
 
-        if (empty($levelOneHeading)) {
-            return false;
-        }
-
-        return $levelOneHeading->textContent === self::SOFTWARE_ERROR_HEADING_CONTENT;
+        return $levelOneHeading instanceof \DOMElement
+            ? self::SOFTWARE_ERROR_HEADING_CONTENT === trim($levelOneHeading->textContent)
+            : false;
     }
 
     private function createValidatorUnknownErrorMessage(): ValidatorErrorMessage
