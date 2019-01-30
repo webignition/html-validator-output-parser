@@ -2,8 +2,6 @@
 
 namespace webignition\HtmlValidatorOutput\Parser;
 
-use webignition\HtmlValidator\Output\Parser\HeaderValues;
-use webignition\HtmlValidator\Output\Parser\InvalidContentTypeException;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\ValidatorMessage\MessageList;
 
