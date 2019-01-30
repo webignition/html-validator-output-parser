@@ -7,6 +7,7 @@ use webignition\InternetMediaType\Parameter\Parser\AttributeParserException;
 use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 use webignition\InternetMediaType\Parser\SubtypeParserException;
 use webignition\InternetMediaType\Parser\TypeParserException;
+use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 
 class Parser
 {
@@ -56,6 +57,7 @@ class Parser
 
         $contentType = null;
         $wasAborted = true;
+        $contentTypeString = '';
 
         foreach ($headerLines as $headerLine) {
             $keyValueParts = explode(':', $headerLine, 2);
@@ -72,10 +74,6 @@ class Parser
                 } catch (SubtypeParserException $e) {
                 } catch (TypeParserException $e) {
                 }
-
-                if (null === $contentType) {
-                    throw new InvalidContentTypeException($contentTypeString);
-                }
             }
 
             if ('x-w3c-validator-status' === $key) {
@@ -87,6 +85,10 @@ class Parser
             }
         }
 
-        return new HeaderValues($wasAborted, $contentType);
+        if ($contentType instanceof InternetMediaTypeInterface) {
+            return new HeaderValues($wasAborted, $contentType);
+        }
+
+        throw new InvalidContentTypeException($contentTypeString);
     }
 }
