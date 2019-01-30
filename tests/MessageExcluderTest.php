@@ -1,10 +1,10 @@
 <?php
 /** @noinspection PhpDocSignatureInspection */
 
-namespace webignition\Tests\HtmlValidator\Output\MessageExcluder;
+namespace webignition\HtmlValidatorOutput\Parser\Tests\MessageExcluder;
 
-use webignition\HtmlValidator\Output\MessageExcluder\MessageExcluder;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
+use webignition\HtmlValidatorOutput\Parser\MessageExcluder;
 
 class MessageExcluderTest extends \PHPUnit\Framework\TestCase
 {
