@@ -5,7 +5,7 @@ namespace webignition\HtmlValidatorOutput\Parser\Tests;
 use webignition\HtmlValidatorOutput\Models\Output;
 use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
 use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
-use webignition\HtmlValidatorOutput\Parser\Configuration;
+use webignition\HtmlValidatorOutput\Parser\Flags;
 use webignition\HtmlValidatorOutput\Parser\InvalidContentTypeException;
 use webignition\HtmlValidatorOutput\Parser\Parser;
 use webignition\ValidatorMessage\MessageList;
@@ -42,7 +42,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testParseFoo(
         $fixtureName,
-        array $configurationValues,
+        int $flags,
         MessageList $expectedMessages,
         $expectedOutputIsValid,
         $expectedOutputWasAborted,
@@ -50,8 +50,8 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     ) {
         $fixture = FixtureLoader::load($fixtureName);
 
-        $parser = new Parser($configurationValues);
-        $output = $parser->parse($fixture);
+        $parser = new Parser();
+        $output = $parser->parse($fixture, $flags);
 
         $this->assertInstanceOf(Output::class, $output);
         $this->assertEquals(
@@ -68,7 +68,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         return [
             'no errors' => [
                 'fixtureName' => 'ValidatorOutput/0-errors.txt',
-                'configurationValues' => [],
+                'flags' => Flags::NONE,
                 'expectedMessages' => new MessageList(),
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
@@ -76,7 +76,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'two errors' => [
                 'fixtureName' => 'ValidatorOutput/2-errors.txt',
-                'configurationValues' => [],
+                'flags' => Flags::NONE,
                 'expectedMessages' => new MessageList([
                     new ValidationErrorMessage(
                         'An img element must have an alt attribute, except under certain conditions. '
@@ -101,9 +101,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'two errors, ignore ampersand encoding issues' => [
                 'fixtureName' => 'ValidatorOutput/2-errors.txt',
-                'configurationValues' => [
-                    Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
-                ],
+                'flags' => Flags::IGNORE_AMPERSAND_ENCODING_ISSUES,
                 'expectedMessages' => new MessageList([
                     new ValidationErrorMessage(
                         'An img element must have an alt attribute, except under certain conditions. '
@@ -120,7 +118,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'two errors, invalid info message json' => [
                 'fixtureName' => 'ValidatorOutput/2-errors-invalid-info-message.txt',
-                'configurationValues' => [],
+                'flags' => Flags::NONE,
                 'expectedMessages' => new MessageList([
                     new ValidationErrorMessage(
                         'An img element must have an alt attribute, except under certain conditions. '
@@ -145,7 +143,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator internal connection timeout error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-connection-timeout.txt',
-                'configurationValues' => [],
+                'flags' => Flags::NONE,
                 'expectedMessages' => new MessageList([
                     new ValidatorErrorMessage(
                         FixtureLoader::load('ExpectedMessage/validator-internal-connection-timeout.txt'),
@@ -158,7 +156,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator internal software error' => [
                 'fixtureName' => 'ValidatorOutput/validator-internal-software-error.txt',
-                'configurationValues' => [],
+                'flags' => Flags::NONE,
                 'expectedMessages' => new MessageList([
                     new ValidatorErrorMessage(
                         'Sorry, this document can\'t be checked',
@@ -171,7 +169,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator invalid character encoding error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-character-encoding.txt',
-                'configurationValues' => [],
+                'flags' => Flags::NONE,
                 'expectedMessages' => new MessageList([
                     new ValidatorErrorMessage(
                         FixtureLoader::load('ExpectedMessage/validator-invalid-character-encoding.txt'),
@@ -184,7 +182,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'validator invalid content type error' => [
                 'fixtureName' => 'ValidatorOutput/validator-invalid-content-type.txt',
-                'configurationValues' => [],
+                'flags' => Flags::NONE,
                 'expectedMessages' => new MessageList([
                     new ValidatorErrorMessage(
                         FixtureLoader::load('ExpectedMessage/validator-invalid-content-type.txt'),
@@ -197,9 +195,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'css errors only, ignore css validation issues' => [
                 'fixtureName' => 'ValidatorOutput/css-errors-only.txt',
-                'configurationValues' => [
-                    Configuration::KEY_CSS_VALIDATION_ISSUES => true,
-                ],
+                'flags' => Flags::IGNORE_CSS_VALIDATION_ISSUES,
                 'expectedMessages' => new MessageList(),
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
@@ -207,49 +203,20 @@ class ParserTest extends \PHPUnit\Framework\TestCase
             ],
             'ampersand encoding issues only, ignore ampersand encoding issues' => [
                 'fixtureName' => 'ValidatorOutput/ampersand-encoding-issues-only.txt',
-                'configurationValues' => [
-                    Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
-                ],
+                'flags' => Flags::IGNORE_AMPERSAND_ENCODING_ISSUES,
+                'expectedMessages' => new MessageList(),
+                'expectedOutputIsValid' => true,
+                'expectedOutputWasAborted' => false,
+                'expectedErrorCount' => 0,
+            ],
+            'css errors and ampersand encoding issues only, ignore all' => [
+                'fixtureName' => 'ValidatorOutput/css-errors-and-ampersand-encoding-errors-only.txt',
+                'flags' => Flags::IGNORE_AMPERSAND_ENCODING_ISSUES | Flags::IGNORE_CSS_VALIDATION_ISSUES,
                 'expectedMessages' => new MessageList(),
                 'expectedOutputIsValid' => true,
                 'expectedOutputWasAborted' => false,
                 'expectedErrorCount' => 0,
             ],
         ];
-    }
-
-    public function testConfigure()
-    {
-        $messageList = new MessageList([
-            new ValidationErrorMessage(
-                '& did not start a character reference. (& probably should have been escaped as &amp;.)',
-                'html5',
-                'improper ampersand explanation',
-                282,
-                83
-            ),
-        ]);
-
-        $fixture = FixtureLoader::load('ValidatorOutput/ampersand-encoding-issues-only.txt');
-
-        $parser = new Parser();
-        $output = $parser->parse($fixture);
-
-        $this->assertEquals(
-            array_values($messageList->getMessages()),
-            array_values($output->getMessages()->getMessages())
-        );
-
-        $this->assertEquals(false, $output->isValid());
-        $this->assertEquals(1, $output->getErrorCount());
-
-        $parser->configure([
-            Configuration::KEY_IGNORE_AMPERSAND_ENCODING_ISSUES => true,
-        ]);
-
-        $output = $parser->parse($fixture);
-        $this->assertEquals(new MessageList(), $output->getMessages());
-        $this->assertEquals(true, $output->isValid());
-        $this->assertEquals(0, $output->getErrorCount());
     }
 }
