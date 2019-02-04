@@ -74,6 +74,15 @@ class MessageFactoryTest extends \PHPUnit\Framework\TestCase
                     'html5'
                 ),
             ],
+            'info message, no messageid, no explanation' => [
+                'values' => [
+                    'message' => 'Info message message',
+                    'type' => 'info',
+                ],
+                'expectedMessage' => new InfoMessage(
+                    'Info message message'
+                ),
+            ],
         ];
     }
 }
