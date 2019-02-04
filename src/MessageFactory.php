@@ -39,10 +39,12 @@ class MessageFactory
 
     private function createInfoMessageFromArray(array $values)
     {
+        $explanation = $values[self::KEY_EXPLANATION] ?? null;
+
         return new InfoMessage(
             $values[self::KEY_MESSAGE],
             $values[self::KEY_MESSAGE_ID],
-            $values[self::KEY_EXPLANATION]
+            $explanation
         );
     }
 }
