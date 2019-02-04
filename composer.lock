@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3463c9b21e2d7ab7b76b1b9fe23e1a49",
+    "content-hash": "a7e1ca30917c68b974c7aac1f0b5dccf",
     "packages": [
         {
             "name": "webignition/disallowed-character-terminated-string",
@@ -49,16 +49,16 @@
         },
         {
             "name": "webignition/html-validator-output-models",
-            "version": "0.9",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/html-validator-output-models.git",
-                "reference": "afb6ee67f8f67aa1e20fb88fb1f9d61461778d7e"
+                "reference": "02f3e1be4e507a30d5c5fe41aaa5aa4e666f5a28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/html-validator-output-models/zipball/afb6ee67f8f67aa1e20fb88fb1f9d61461778d7e",
-                "reference": "afb6ee67f8f67aa1e20fb88fb1f9d61461778d7e",
+                "url": "https://api.github.com/repos/webignition/html-validator-output-models/zipball/02f3e1be4e507a30d5c5fe41aaa5aa4e666f5a28",
+                "reference": "02f3e1be4e507a30d5c5fe41aaa5aa4e666f5a28",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "output",
                 "validator"
             ],
-            "time": "2019-02-04T13:19:37+00:00"
+            "time": "2019-02-04T14:01:14+00:00"
         },
         {
             "name": "webignition/internet-media-type",
