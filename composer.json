@@ -28,7 +28,7 @@
     "require": {
         "php": ">=7.2",
         "webignition/internet-media-type":">=2,<3",
-        "webignition/html-validator-output-models": ">=0.6,<1"
+        "webignition/html-validator-output-models": ">=0.9,<1"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",
